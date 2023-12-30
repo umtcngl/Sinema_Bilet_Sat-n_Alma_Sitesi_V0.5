@@ -1,0 +1,125 @@
+.containergiris{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    margin-top: 100px;
+    opacity: 0.7;
+}
+.formsubmit{
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.formsubmit:hover{
+    background-color: white;
+    color: black;
+    transform: scale(1.1);
+}
+.formsubmit:active{
+    transform: scale(1);
+    background-color: gold;
+}
+.girisyapform{
+    background-color:rgba(255, 255, 255, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+}
+.kayitolform{
+    height: 350px;
+    background-color:rgba(255, 255, 255, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+}
+.myspan{
+    font-size: 20px;
+    color: red;
+}
+h1{
+    letter-spacing: 3px;
+    word-spacing: 15px;
+}
+.formdüzenle{
+    margin: 0;
+}
+.formsubmit1{
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.formsubmit1:hover{
+    background-color: darkred;
+    color: white;
+    transform: scale(1.1);
+}
+.formsubmit1:active{
+    transform: scale(1);
+    background-color: red;
+}
+.container1111{
+    font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+}
+.anketimsi{
+    width: 40%;
+    background-color: dimgrey;
+    opacity: 0.7;
+    border-radius: 20px;
+    margin-right: 30px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    height: 450px;
+}
+.iletisimbaglanti{
+    width: 20%;
+    background-color:brown;
+    opacity: 0.7;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    height: 450px;
+}
+.iletisimbaglanti  a{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: white;
+    font-size: 20px;
+    margin-top:40px ;
+    background-color: transparent;
+}
+.iletisimbaglanti  a:hover{
+    color: gold;
+    
+}
+.adivi{
+    margin-top: 100px;
+}
+.adivi:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+.girisyapform input{
+    margin: 0;
+}
+.biletlerimsinifi{
+    margin-top: 60px;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;    
+}
