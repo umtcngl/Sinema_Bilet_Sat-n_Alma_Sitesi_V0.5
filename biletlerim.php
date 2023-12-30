@@ -192,7 +192,12 @@ function koltukIDyiHarfeCevir($siraNumarasi, $koltukNumarasi)
 
 <!-- Biletler Tablosu -->
 <div class="biletlerimsinifi">
-    <h1 style="color: gold;">Biletlerim</h1>
+    <div class="ortala">
+        <h1 style="color: gold;">Biletlerim</h1>
+        <label class="altalta">
+            <input type="checkbox" id="anaCheckbox">Tarihi Geçmiş Biletleri Gösterme
+        </label>
+    </div>
     <table>
         <thead>
         <tr>
@@ -251,16 +256,59 @@ function koltukIDyiHarfeCevir($siraNumarasi, $koltukNumarasi)
                 </td>
                 <td><?php echo $bilet['tarih']; ?></td>
                 <td>
-                    <form method="POST" action="">
-                        <input type="hidden" name="iptal_bilet_id" value="<?php echo $bilet['biletID']; ?>">
-                        <input type="submit" class="formsubmit1" name="iptal" value="İptal">
-                    </form>
+                <?php
+                date_default_timezone_set('Europe/Istanbul');
+                // İşlem tarihini ve şuanki tarihi al
+                $islemTarihi = new DateTime($bilet['tarih']);
+                $suankiTarih = new DateTime();
+                $formatlanmişislemTarihi=$islemTarihi->format('Y-m-d');
+                $formatlanmişsuankiTarih=$suankiTarih->format('Y-m-d');
+                /*
+                // İşlem tarihi ve seans saatini ekrana yazdır
+                echo "İşlem Tarihi: " . $islemTarihi->format('Y-m-d') . "<br>";
+                echo "Şuanki Tarih: " . $suankiTarih->format('Y-m-d') . "<br>";
+                echo "Seans Saati: " . $bilet['seans'] . "<br>";
+                echo date("H:i"). "<br>";
+                */
+
+                // İşlem tarihi ve seans saatini karşılaştır
+                if ($formatlanmişislemTarihi > $formatlanmişsuankiTarih || ($formatlanmişislemTarihi == $formatlanmişsuankiTarih && $bilet['seans'] > date("H:i"))) {
+                    // İptal edilebilir durumda ise
+                    echo '
+                        <form method="POST" action="">
+                            <input type="hidden" name="iptal_bilet_id" value="' . $bilet['biletID'] . '">
+                            <input type="submit" class="formsubmit1" name="iptal" value="İptal">
+                        </form>';
+                } else {
+                    // İptal edilemez durumda ise
+                    echo '<button class="tiklanamazbuton" disabled>İptal</button>';
+                }
+                ?>
                 </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
+<script>
+document.getElementById('anaCheckbox').addEventListener('change', function() {
+    var tiklanamazSatirlar = document.querySelectorAll('.tiklanamazbuton').forEach(function(button) {
+        var satir = button.closest('tr'); // Satırı bul
+        if (document.getElementById('anaCheckbox').checked) {
+            // Ana checkbox seçili ise, tiklanamaz satırları göster
+            satir.style.display = 'none';
+        } else {
+            // Ana checkbox seçili değilse, tiklanamaz satırları gizle
+            satir.style.display = 'table-row';
+        }
+    });
+});
+
+// Sayfa yüklendiğinde checkbox durumunu kontrol et
+anaCheckbox.checked = true; // Checkbox'u işaretli yap
+anaCheckbox.dispatchEvent(new Event('change'));
+</script>
 
 
 </body>

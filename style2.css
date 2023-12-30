@@ -123,3 +123,15 @@ h1{
     align-items: center;
     text-align: center;    
 }
+.tiklanamazbuton{
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5; /* Opsiyonel: Butonun görünürlüğünü azaltabilirsiniz */
+
+    padding: 10px 20px;
+    background-color: gray;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+}

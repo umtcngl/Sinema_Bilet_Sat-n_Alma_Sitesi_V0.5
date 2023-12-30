@@ -26,7 +26,7 @@ $mesaj = ''; // Mesajı saklamak için boş bir string
 // Önceki sayıları oturumdan al
 $oncekiOrtadakiSayi = isset($_SESSION['oncekiOrtadakiSayi']) ? $_SESSION['oncekiOrtadakiSayi'] : 0;
 $oncekiHafizaSayi = isset($_SESSION['oncekiHafizaSayi']) ? $_SESSION['oncekiHafizaSayi'] : 0;
-$tahminUcreti = 20;
+$tahminUcreti = 50;
 // Tahmin işlemi kontrolü
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tahmin'])) {
     $kullaniciBakiye = $_SESSION['bakiye'];
@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tahmin'])) {
         if (($_SESSION['ortadakiSayi'] < $_SESSION['hafizaSayi'] && $tahmin == 'Büyük') || ($_SESSION['ortadakiSayi'] > $_SESSION['hafizaSayi'] && $tahmin == 'Küçük')) {
             // Kazandınız
             $kullaniciBakiye += 2 * $tahminUcreti;
-            $mesaj = "KAZANDINIZ!!! Ortadaki: {$_SESSION['ortadakiSayi']}, Hafızadaki sayı: {$_SESSION['hafizaSayi']}, Tahmininiz : $tahmin";
+            $mesaj = "{$tahminUcreti} TL KAZANDINIZ!!! Ortadaki: {$_SESSION['ortadakiSayi']}, Hafızadaki sayı: {$_SESSION['hafizaSayi']}, Tahmininiz : $tahmin";
         } else {
             // Kaybettiniz
-            $mesaj = "Kaybettiniz. Ortadaki: {$_SESSION['ortadakiSayi']}, Hafızadaki sayı: {$_SESSION['hafizaSayi']}, Tahmininiz : $tahmin";
+            $mesaj = "{$tahminUcreti} TL Kaybettiniz. Ortadaki: {$_SESSION['ortadakiSayi']}, Hafızadaki sayı: {$_SESSION['hafizaSayi']}, Tahmininiz : $tahmin";
         }
 
         // Veritabanındaki bakiyeyi güncelle
