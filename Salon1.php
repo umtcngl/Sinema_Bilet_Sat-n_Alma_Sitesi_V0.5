@@ -38,6 +38,8 @@ if ($salonRow) {
     echo "Salon ID bulunamadı.";
 }
 
+
+$currentHour = date("H");
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -85,7 +87,7 @@ if ($salonRow) {
         <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi']." "."(".$koltukSayisi.")";?></div>
     </div>
         <div class="container1">
-            <div id="seans12" style="display:flex">
+            <div id="seans12" style="display:none">
                 <div class="sira">
                     <div class="harfler">A</div>
                     <div class="harfler">B</div>
@@ -240,13 +242,14 @@ if ($salonRow) {
             ?>
 
             </div>
+            <div id="seanslarbitti" style="display:none" class="uyari"><p>Bugünün Seansları Bitti. <br><br> Yarın Tekrar Deneyin.</p></div>
             <div class="altalta">
                 <!-- Seans butonları -->
                 <form action="" method="POST">
-                <div><input type="button" onclick="seans12göster()" class="formsubmit" value="12:00 Seansı"></div><br>
-                <div><input type="button" onclick="seans14göster()" class="formsubmit" value="14:00 Seansı"></div><br>
-                <div><input type="button" onclick="seans16göster()" class="formsubmit" value="16:00 Seansı"></div><br>
-                <div><input type="button" onclick="seans18göster()" class="formsubmit" value="18:00 Seansı"></div>
+                <div><input type="button" onclick="seans12göster()" class="formsubmit <?php echo ($currentHour >= 12) ? 'tiklanamazbuton' : ''; ?>" value="12:00 Seansı"></div><br>
+        <div><input type="button" onclick="seans14göster()" class="formsubmit <?php echo ($currentHour >= 14) ? 'tiklanamazbuton' : ''; ?>" value="14:00 Seansı"></div><br>
+        <div><input type="button" onclick="seans16göster()" class="formsubmit <?php echo ($currentHour >= 16) ? 'tiklanamazbuton' : ''; ?>" value="16:00 Seansı"></div><br>
+        <div><input type="button" onclick="seans18göster()" class="formsubmit <?php echo ($currentHour >= 18) ? 'tiklanamazbuton' : ''; ?>" value="18:00 Seansı"></div>
                 </form>
             </div>
         </div>
@@ -366,6 +369,9 @@ function seans12göster(){
     seans16divi.style.display = "none";
     seans18divi.style.display = "none";
 
+    var seansbittidivi = document.getElementById("seanslarbitti");
+    seansbittidivi.style.display="none";
+
 }
 function seans14göster(){
     var seans12divi = document.getElementById("seans12");
@@ -378,6 +384,8 @@ function seans14göster(){
     seans16divi.style.display = "none";
     seans18divi.style.display = "none";
 
+    var seansbittidivi = document.getElementById("seanslarbitti");
+    seansbittidivi.style.display="none";
 }
 function seans16göster(){
     var seans12divi = document.getElementById("seans12");
@@ -390,6 +398,8 @@ function seans16göster(){
     seans16divi.style.display = "flex";
     seans18divi.style.display = "none";
 
+    var seansbittidivi = document.getElementById("seanslarbitti");
+    seansbittidivi.style.display="none";
 }
 function seans18göster(){
     var seans12divi = document.getElementById("seans12");
@@ -402,7 +412,83 @@ function seans18göster(){
     seans16divi.style.display = "none";
     seans18divi.style.display = "flex";
 
+    var seansbittidivi = document.getElementById("seanslarbitti");
+    seansbittidivi.style.display="none";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Şu anki saat ve seans saatleri
+    const currentTime = new Date();
+    const seansSaatleri = [12, 14, 16, 18];
+
+    // Satın al butonunu ve seans butonlarını seç
+    const satinalBtn = document.querySelector('.formsubmit1');
+    const seansButtons = document.querySelectorAll('.formsubmit');
+
+    // Kontrol değişkeni
+    let tümSeanslarTıklanabilir = true;
+
+    // Her bir seans butonu için kontrol yap
+    seansButtons.forEach((seansButton, index) => {
+        // Eğer şu anki saat, seans saatinin geçmişse
+        if (currentTime.getHours() >= seansSaatleri[index]) {
+            // İlgili seans butonuna belirli bir class ekle
+            seansButton.classList.add('tiklanamazbuton');
+            // Kontrol değişkenini güncelle
+            tümSeanslarTıklanabilir = false;
+        }
+
+        // Seans butonuna tıklanma olayını ekle
+        seansButton.addEventListener('click', function () {
+            // Eğer şu anki saat, seans saatinin geçmişse
+            if (currentTime.getHours() >= seansSaatleri[index]) {
+                // Satın al butonuna belirli bir class ekle
+                satinalBtn.classList.add('tiklanamazbuton');
+            } else {
+                // Aksi takdirde, class'ı kaldır
+                satinalBtn.classList.remove('tiklanamazbuton');
+            }
+            
+            // Kontrol değişkenini güncelle
+            tümSeanslarTıklanabilir = seansButtons.every(button => button.classList.contains('tiklanamazbuton'));
+            
+            // Tüm seanslar tıklanamazsa uyarı mesajını göster
+            if (!tümSeanslarTıklanabilir) {
+                const seansbittidivi = document.getElementById("seanslarbitti");
+                seansbittidivi.style.display = "block";
+
+                satinalBtn.classList.add('tiklanamazbuton');
+            }
+        });
+    });
+
+    // Tüm seanslar tıklanamazsa uyarı mesajını göster
+    if (!tümSeanslarTıklanabilir) {
+        const seansbittidivi = document.getElementById("seanslarbitti");
+        seansbittidivi.style.display = "block";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Seans butonlarını seç
+    const seansButtons = document.querySelectorAll('.formsubmit');
+
+    // Kontrol değişkeni
+    let tiklanabilirButonBulundu = false;
+
+    // Her bir seans butonunu kontrol et
+    seansButtons.forEach((seansButton) => {
+        // Eğer tiklanamazbuton sınıfına sahip değilse
+        if (!seansButton.classList.contains('tiklanamazbuton') && !tiklanabilirButonBulundu) {
+            // Butonu tıkla
+            seansButton.click();
+            // Kontrol değişkenini güncelle
+            tiklanabilirButonBulundu = true;
+        }
+    });
+});
+
+
 </script>
 </body>
 </html>

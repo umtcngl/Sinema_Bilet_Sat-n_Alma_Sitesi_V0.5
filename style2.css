@@ -135,3 +135,14 @@ h1{
     border: none;
     border-radius: 20px;
 }
+.uyari{
+    margin: 50px;
+    height: auto;
+    padding: 30px;
+    background-color: gray;
+    color:white;
+    border-radius: 20px;
+    font-size: 20px;
+    word-spacing: 20px;
+    
+}
