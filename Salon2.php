@@ -86,7 +86,7 @@ $currentHour = date("H");
         <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi']." "."(".$koltukSayisi.")";?></div>
     </div>
         <div class="container1">
-            <div id="seans12" style="display:flex">
+            <div id="seans12" style="display:none">
                 <div class="sira">
                     <div class="harfler">A</div>
                     <div class="harfler">B</div>
@@ -455,8 +455,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!tümSeanslarTıklanabilir) {
                 const seansbittidivi = document.getElementById("seanslarbitti");
                 seansbittidivi.style.display = "block";
-
-                satinalBtn.classList.add('tiklanamazbuton');
             }
         });
     });
@@ -465,6 +463,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!tümSeanslarTıklanabilir) {
         const seansbittidivi = document.getElementById("seanslarbitti");
         seansbittidivi.style.display = "block";
+
+        satinalBtn.classList.add('tiklanamazbuton');
     }
 });
 

@@ -457,7 +457,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const seansbittidivi = document.getElementById("seanslarbitti");
                 seansbittidivi.style.display = "block";
 
-                satinalBtn.classList.add('tiklanamazbuton');
             }
         });
     });
@@ -466,6 +465,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!tümSeanslarTıklanabilir) {
         const seansbittidivi = document.getElementById("seanslarbitti");
         seansbittidivi.style.display = "block";
+
+        satinalBtn.classList.add('tiklanamazbuton');
     }
 });
 
