@@ -108,8 +108,7 @@ a{
     align-items: center;
     display: flex;
 }
-.altalta{
-    display: block;
+.altalta{   
     position: absolute;
     right: 200px;
 }
@@ -132,6 +131,9 @@ a{
 .container1 .seat:not(.reserved):hover {
     cursor: pointer;
     transform: scale(1.3);
+}
+.yanyana{
+    display: flex;
 }
 
 /*------------------------------------------------------------------------------------------------------*/
@@ -301,3 +303,42 @@ p.text span{
     color: gold;
     
   }
+
+
+  .formradio {
+    display: none; /* Orijinal radio butonunu gizle */
+}
+
+.formradio + label {
+    position: relative;
+    padding-left: 30px; /* Labelin sol tarafına bir boşluk bırak */
+    cursor: pointer;
+    line-height: 30px; /* Metni ortalamak için kullanılır */
+    color: white; /* Metin rengini beyaz yap */
+}
+
+.formradio + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px; /* Boyutu ayarlayabilirsiniz */
+    height: 20px; /* Boyutu ayarlayabilirsiniz */
+    border: 2px solid gold; /* Çerçeve rengi */
+    border-radius: 50%; /* Yuvarlatılmış köşeler */
+    background-color: #fff; /* Arka plan rengi */
+    transition: background-color 0.3s; /* Geçiş efekti */
+}
+
+.formradio:checked + label:before {
+    background-color: gold; /* Seçildiğinde arka plan rengini değiştir */
+    color: #333; /* Seçildiğinde metin rengini değiştir */
+}
+
+.formradio:hover + label:before {
+    transform: scale(1.2); /* Hover olduğunda büyütme efekti */
+}
+.formradio:active + label:before {
+    transform: scale(1);
+}
+

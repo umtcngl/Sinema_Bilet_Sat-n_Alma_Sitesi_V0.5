@@ -38,7 +38,7 @@ if ($salonRow) {
     echo "Salon ID bulunamadı.";
 }
 
-$currentHour = date("H");
+date_default_timezone_set('Europe/Istanbul');
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -85,172 +85,65 @@ $currentHour = date("H");
         <div class="screen"></div>
         <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi']." "."(".$koltukSayisi.")";?></div>
     </div>
-        <div class="container1">
-            <div id="seans12" style="display:none">
-                <div class="sira">
-                    <div class="harfler">A</div>
-                    <div class="harfler">B</div>
-                    <div class="harfler">C</div>
-                    <div class="harfler">D</div>
-                    <div class="harfler">E</div>
-                    <div class="harfler">F</div>
-                    <div class="harfler">G</div>
-                    <div class="harfler">H</div>
-                    <div class="harfler"></div>
-                </div>
-                <?php
-                    // Sıra sayısı
-                    $siraSayisi = 11;
-
-                    // Koltuk sayısı her sırada
-                    $koltukSayisi = 8;
-
-                    // Başlangıç değeri
-                    $baslangicDegeri = 1409;
-
-                    // Seat divlerine id atama işlemi
-                    for ($i = 1; $i <= $siraSayisi; $i++) {
-                        echo '<div class="sira">';
-
-                        for ($j = 1; $j <= $koltukSayisi; $j++) {
-                            $seatID =$baslangicDegeri;
-                            echo '<div class="seat" id="' . $seatID . '"></div>';
-                            $baslangicDegeri++;
-
-                        }
-
-                        echo '<div class="harfler">' . $i . '</div>';
-                        echo '</div>';
-                    }
-                ?>
+    <div class="container1">
+        <div class="yanyana">
+            <div class="sira">
+                <div class="harfler">A</div>
+                <div class="harfler">B</div>
+                <div class="harfler">C</div>
+                <div class="harfler">D</div>
+                <div class="harfler">E</div>
+                <div class="harfler">F</div>
+                <div class="harfler">G</div>
+                <div class="harfler">H</div>
+                <div class="harfler"></div>
             </div>
+            <?php
+            $siraSayisi = 11;
+            $koltukSayisi = 8;
+            $baslangicDegeri = 1;
 
-            <div id="seans14" style="display:none">
-                <div class="sira">
-                    <div class="harfler">A</div>
-                    <div class="harfler">B</div>
-                    <div class="harfler">C</div>
-                    <div class="harfler">D</div>
-                    <div class="harfler">E</div>
-                    <div class="harfler">F</div>
-                    <div class="harfler">G</div>
-                    <div class="harfler">H</div>
-                    <div class="harfler"></div>
-                </div>
-                <?php
-                    // Sıra sayısı
-                    $siraSayisi = 11;
+            $harfler = range('A', 'H');
 
-                    // Koltuk sayısı her sırada
-                    $koltukSayisi = 8;
+            for ($i = 1; $i <= $siraSayisi; $i++) {
+                echo '<div class="sira">';
+                for ($j = 1; $j <= $koltukSayisi; $j++) {
+                    $koltukID = $harfler[$j - 1] . $i;
+                    echo '<div class="seat" id="' . $koltukID . '"></div>';
+                }
 
-                    // Başlangıç değeri
-                    $baslangicDegeri = 1497;
-
-                    // Seat divlerine id atama işlemi
-                    for ($i = 1; $i <= $siraSayisi; $i++) {
-                        echo '<div class="sira">';
-
-                        for ($j = 1; $j <= $koltukSayisi; $j++) {
-                            $seatID =$baslangicDegeri;
-                            echo '<div class="seat" id="' . $seatID . '"></div>';
-                            $baslangicDegeri++;
-
-                        }
-
-                        echo '<div class="harfler">' . $i . '</div>';
-                        echo '</div>';
-                    }
-                ?>
-            </div>
-
-            <div id="seans16" style="display:none">
-                <div class="sira">
-                    <div class="harfler">A</div>
-                    <div class="harfler">B</div>
-                    <div class="harfler">C</div>
-                    <div class="harfler">D</div>
-                    <div class="harfler">E</div>
-                    <div class="harfler">F</div>
-                    <div class="harfler">G</div>
-                    <div class="harfler">H</div>
-                    <div class="harfler"></div>
-                </div>
-                <?php
-                    // Sıra sayısı
-                    $siraSayisi = 11;
-
-                    // Koltuk sayısı her sırada
-                    $koltukSayisi = 8;
-
-                    // Başlangıç değeri
-                    $baslangicDegeri = 1585;
-
-                    // Seat divlerine id atama işlemi
-                    for ($i = 1; $i <= $siraSayisi; $i++) {
-                        echo '<div class="sira">';
-
-                        for ($j = 1; $j <= $koltukSayisi; $j++) {
-                            $seatID =$baslangicDegeri;
-                            echo '<div class="seat" id="' . $seatID . '"></div>';
-                            $baslangicDegeri++;
-
-                        }
-
-                        echo '<div class="harfler">' . $i . '</div>';
-                        echo '</div>';
-                    }
-                ?>
-            </div>
-
-            <div id="seans18" style="display:none">
-                <div class="sira">
-                    <div class="harfler">A</div>
-                    <div class="harfler">B</div>
-                    <div class="harfler">C</div>
-                    <div class="harfler">D</div>
-                    <div class="harfler">E</div>
-                    <div class="harfler">F</div>
-                    <div class="harfler">G</div>
-                    <div class="harfler">H</div>
-                    <div class="harfler"></div>
-                </div>
-                <?php
-                    // Sıra sayısı
-                    $siraSayisi = 11;
-
-                    // Koltuk sayısı her sırada
-                    $koltukSayisi = 8;
-
-                    // Başlangıç değeri
-                    $baslangicDegeri = 1673;
-
-                    // Seat divlerine id atama işlemi
-                    for ($i = 1; $i <= $siraSayisi; $i++) {
-                        echo '<div class="sira">';
-
-                        for ($j = 1; $j <= $koltukSayisi; $j++) {
-                            $seatID =$baslangicDegeri;
-                            echo '<div class="seat" id="' . $seatID . '"></div>';
-                            $baslangicDegeri++;
-                        }
-
-                        echo '<div class="harfler">' . $i . '</div>';
-                        echo '</div>';
-                    }
-                ?>
-
-            </div>
-            <div id="seanslarbitti" style="display:none" class="uyari"><p>Bugünün Seansları Bitti. <br><br> Yarın Tekrar Deneyin.</p></div>
+                echo '<div class="harfler">' . $i . '</div>';
+                echo '</div>';
+            }
+            ?>
+        </div>
             <div class="altalta">
-                <!-- Seans butonları -->
-                <form action="" method="POST">
-                <div><input type="button" onclick="seans12göster()" class="formsubmit <?php echo ($currentHour >= 12) ? 'tiklanamazbuton' : ''; ?>" value="12:00 Seansı"></div><br>
-        <div><input type="button" onclick="seans14göster()" class="formsubmit <?php echo ($currentHour >= 14) ? 'tiklanamazbuton' : ''; ?>" value="14:00 Seansı"></div><br>
-        <div><input type="button" onclick="seans16göster()" class="formsubmit <?php echo ($currentHour >= 16) ? 'tiklanamazbuton' : ''; ?>" value="16:00 Seansı"></div><br>
-        <div><input type="button" onclick="seans18göster()" class="formsubmit <?php echo ($currentHour >= 18) ? 'tiklanamazbuton' : ''; ?>" value="18:00 Seansı"></div>
-                </form>
-            </div>
+            <!-- Seans butonları -->
+            <form id="seansForm" method="POST">
+                <input type="date" id="tarih" name="tarih" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false">
+                <br><br>
+
+                <div>
+                    <input type="radio" id="seans12" name="seans" value="12:00" class="formradio">
+                    <label for="seans12">12:00 Seansı</label>
+                </div>
+                <br>
+                <div>
+                    <input type="radio" id="seans14" name="seans" value="14:00" class="formradio">
+                    <label for="seans14">14:00 Seansı</label>
+                </div>
+                <br>
+                <div>
+                    <input type="radio" id="seans16" name="seans" value="16:00" class="formradio">
+                    <label for="seans16">16:00 Seansı</label>
+                </div>
+                <br/>
+                <div>
+                    <input type="radio" id="seans18" name="seans" value="18:00" class="formradio">
+                    <label for="seans18">18:00 Seansı</label>
+                </div>
+            </form>
+        </div>
         </div>
 
 
@@ -273,21 +166,20 @@ $currentHour = date("H");
     </p>
     <div class="ortala">
     <form id="satinalmaForm" method="POST" action="satinal.php">
-        <!-- Form içeriği buraya eklenecek -->
-        <input type="submit" class="formsubmit1" value="Satın Al">
+        <input type="submit" class="formsubmit1" value="Satın Al" id="satinalButton">
     </form>
     </div>
 <script>
 const container = document.querySelector(".container1");
 const count = document.getElementById('count');
 const amount = document.getElementById('amount');
+const buyButton = document.getElementById('satinalButton'); // Satın al butonunun id'sini buraya ekleyin
 
-let selectedSeatIDs = []; // Yeni bir dizi ekleyin
+let selectedSeatIDs = [];
 
 container.addEventListener('click', function (e) {
     if (e.target.classList.contains('seat') && !e.target.classList.contains('reserved')) {
         e.target.classList.toggle('selected');
-
         updateCounts();
     }
 });
@@ -299,47 +191,107 @@ function updateCounts() {
     let selectedSeatCount = selectedSeats.length;
     count.innerText = selectedSeatCount;
     amount.innerText = selectedSeatCount * 50; // Her bir koltuk 50 TL olsun varsayalım
+
+    console.log('Seçilen Koltuk ID\'leri:', selectedSeatIDs);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Durumu dolu olan koltuklara reserved class'ını ekle
-    fetch('koltuk_kontrol.php')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(koltukID => {
-                const koltukElement = document.getElementById(koltukID);
-                if (koltukElement) {
-                    koltukElement.classList.add('reserved');
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Hata:', error);
+const seansForm = document.getElementById('seansForm');
+
+seansForm.addEventListener('change', function () {
+    // Seçili seansı al
+    const selectedSeans = document.querySelector('input[name="seans"]:checked');
+
+    // Eğer seans seçilmişse, seans değerini al; seçili değilse "Seans seçilmedi" olarak ata
+    const seansValue = selectedSeans ? selectedSeans.value + ':00' : "Seans seçilmedi";
+
+    // Seçili tarihi al, ve JavaScript Date objesine çevir
+    const selectedTarih = new Date(document.getElementById('tarih').value);
+    const tarihString = selectedTarih.toISOString().split('T')[0];
+    // Sayfa adını PHP'den al
+    const sayfaAdi = "<?php echo $sayfaAdi; ?>";
+
+    // Şuanki zamanı PHP'den al, ve JavaScript Date objesine çevir
+    const currentTime = new Date("<?php date_default_timezone_set('Europe/Istanbul'); echo date("Y-m-d H:i"); ?>");
+
+    // Seçili seansın tarihini ve saatini bir araya getir
+    const selectedDateTime = new Date(selectedTarih.getFullYear(), selectedTarih.getMonth(), selectedTarih.getDate(), 
+        parseInt(seansValue.split(':')[0]), parseInt(seansValue.split(':')[1]));
+
+    // Tarihi ve saatleri kontrol et
+    if (selectedDateTime < currentTime) {
+        // Eğer seçili tarih ve saat, şuanki tarihten ve saatinden önceyse
+        // Satın alma butonuna tiklanamazbuton class'ını ekle
+        buyButton.classList.add('tiklanamazbuton');
+    } else {
+        // Aksi takdirde tiklanamazbuton class'ını kaldır
+        buyButton.classList.remove('tiklanamazbuton');
+    }
+
+    const reservedSeats = container.querySelectorAll('.seat.reserved');
+    reservedSeats.forEach(reservedSeat => {
+        reservedSeat.classList.remove('reserved');
+    });
+
+    fetch('koltuk_kontrol.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `sayfaAdi=${sayfaAdi}&seans=${seansValue}&secilentarih=${tarihString}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Gelen Veriler:', data); // Gelen verileri konsolda göster
+        data.forEach(koltukID => {
+            const koltukElement = document.getElementById(koltukID);
+            if (koltukElement) {
+                koltukElement.classList.add('reserved');
+            }
         });
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+    });
+
 });
 
-// Satın Alma Formunu Gönder
+
+document.addEventListener('DOMContentLoaded', function() {
+    buyButton.classList.add('tiklanamazbuton');
+    var today = new Date();
+    var minDate = new Date(today);
+    minDate.setDate(today.getDate());
+
+    var daysUntilNextFriday = 5 - today.getDay() + 1;
+    var nextFriday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + daysUntilNextFriday);
+
+    var maxDate = nextFriday.toISOString().split('T')[0];
+
+    document.getElementById('tarih').setAttribute('min', minDate.toISOString().split('T')[0]);
+    document.getElementById('tarih').setAttribute('max', maxDate);
+});
+
 function satinalmaFormunuGonder(e) {
-    e.preventDefault(); // Formun otomatik olarak submit olmasını engelle
+    e.preventDefault();
 
-    // En az bir koltuk seçilmiş mi diye kontrol et
     if (selectedSeatIDs.length > 0) {
-        console.log(selectedSeatIDs); // Konsola seçilen koltuk ID'lerini yazdır
+        const selectedSeans = document.querySelector('input[name="seans"]:checked');
+        const seansValue = selectedSeans ? selectedSeans.value : "Seans seçilmedi";
+        const selectedTarih = document.getElementById('tarih').value;
+        const filmAdi = "<?php echo $filmAdi['filmAdi']; ?>";
+        const sayfaAdi = "<?php echo $sayfaAdi; ?>";
+        const koltukIDler = selectedSeatIDs.join(',');
 
-        // Seçilen koltuk ID'lerini ve rezervasyon durumunu PHP sayfasına gönder
         fetch('satinal.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: 'koltukID=' + selectedSeatIDs.join(',') + '&isReserved=true',
+            body: `sayfaAdi=${sayfaAdi}&seans=${seansValue}&secilentarih=${selectedTarih}&koltukID=${koltukIDler}&filmAdi=${filmAdi}`,
         })
         .then(response => response.text())
         .then(data => {
-            // PHP sayfasının cevabını burada işleyebilirsin
             console.log(data);
-
-            // Sayfayı yeniden yükle veya başka bir işlem yapabilirsin
             location.reload();
         })
         .catch(error => {
@@ -350,144 +302,10 @@ function satinalmaFormunuGonder(e) {
     }
 }
 
-
-document.querySelector('#satinalmaForm').addEventListener('submit', function(e) {
-    satinalmaFormunuGonder(e);
+document.getElementById('satinalButton').addEventListener('click', function (e) {
+    e.preventDefault();
+    satinalmaFormunuGonder(new Event('dummy'));
 });
-
-
-// Seans Seçme İşlemleri : 
-function seans12göster(){
-    var seans12divi = document.getElementById("seans12");
-    var seans14divi = document.getElementById("seans14");
-    var seans16divi = document.getElementById("seans16");
-    var seans18divi = document.getElementById("seans18");
-
-    seans12divi.style.display = "flex";
-    seans14divi.style.display = "none";
-    seans16divi.style.display = "none";
-    seans18divi.style.display = "none";
-
-    var seansbittidivi = document.getElementById("seanslarbitti");
-    seansbittidivi.style.display="none";
-
-}
-function seans14göster(){
-    var seans12divi = document.getElementById("seans12");
-    var seans14divi = document.getElementById("seans14");
-    var seans16divi = document.getElementById("seans16");
-    var seans18divi = document.getElementById("seans18");
-
-    seans12divi.style.display = "none";
-    seans14divi.style.display = "flex";
-    seans16divi.style.display = "none";
-    seans18divi.style.display = "none";
-
-    var seansbittidivi = document.getElementById("seanslarbitti");
-    seansbittidivi.style.display="none";
-}
-function seans16göster(){
-    var seans12divi = document.getElementById("seans12");
-    var seans14divi = document.getElementById("seans14");
-    var seans16divi = document.getElementById("seans16");
-    var seans18divi = document.getElementById("seans18");
-
-    seans12divi.style.display = "none";
-    seans14divi.style.display = "none";
-    seans16divi.style.display = "flex";
-    seans18divi.style.display = "none";
-
-    var seansbittidivi = document.getElementById("seanslarbitti");
-    seansbittidivi.style.display="none";
-}
-function seans18göster(){
-    var seans12divi = document.getElementById("seans12");
-    var seans14divi = document.getElementById("seans14");
-    var seans16divi = document.getElementById("seans16");
-    var seans18divi = document.getElementById("seans18");
-
-    seans12divi.style.display = "none";
-    seans14divi.style.display = "none";
-    seans16divi.style.display = "none";
-    seans18divi.style.display = "flex";
-
-    var seansbittidivi = document.getElementById("seanslarbitti");
-    seansbittidivi.style.display="none";
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Şu anki saat ve seans saatleri
-    const currentTime = new Date();
-    const seansSaatleri = [12, 14, 16, 18];
-
-    // Satın al butonunu ve seans butonlarını seç
-    const satinalBtn = document.querySelector('.formsubmit1');
-    const seansButtons = document.querySelectorAll('.formsubmit');
-
-    // Kontrol değişkeni
-    let tümSeanslarTıklanabilir = true;
-
-    // Her bir seans butonu için kontrol yap
-    seansButtons.forEach((seansButton, index) => {
-        // Eğer şu anki saat, seans saatinin geçmişse
-        if (currentTime.getHours() >= seansSaatleri[index]) {
-            // İlgili seans butonuna belirli bir class ekle
-            seansButton.classList.add('tiklanamazbuton');
-            // Kontrol değişkenini güncelle
-            tümSeanslarTıklanabilir = false;
-        }
-
-        // Seans butonuna tıklanma olayını ekle
-        seansButton.addEventListener('click', function () {
-            // Eğer şu anki saat, seans saatinin geçmişse
-            if (currentTime.getHours() >= seansSaatleri[index]) {
-                // Satın al butonuna belirli bir class ekle
-                satinalBtn.classList.add('tiklanamazbuton');
-            } else {
-                // Aksi takdirde, class'ı kaldır
-                satinalBtn.classList.remove('tiklanamazbuton');
-            }
-            
-            // Kontrol değişkenini güncelle
-            tümSeanslarTıklanabilir = seansButtons.every(button => button.classList.contains('tiklanamazbuton'));
-            
-            // Tüm seanslar tıklanamazsa uyarı mesajını göster
-            if (!tümSeanslarTıklanabilir) {
-                const seansbittidivi = document.getElementById("seanslarbitti");
-                seansbittidivi.style.display = "block";
-            }
-        });
-    });
-
-    // Tüm seanslar tıklanamazsa uyarı mesajını göster
-    if (!tümSeanslarTıklanabilir) {
-        const seansbittidivi = document.getElementById("seanslarbitti");
-        seansbittidivi.style.display = "block";
-
-        
-        satinalBtn.classList.add('tiklanamazbuton');
-    }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Seans butonlarını seç
-    const seansButtons = document.querySelectorAll('.formsubmit');
-
-    // Kontrol değişkeni
-    let tiklanabilirButonBulundu = false;
-
-    // Her bir seans butonunu kontrol et
-    seansButtons.forEach((seansButton) => {
-        // Eğer tiklanamazbuton sınıfına sahip değilse
-        if (!seansButton.classList.contains('tiklanamazbuton') && !tiklanabilirButonBulundu) {
-            // Butonu tıkla
-            seansButton.click();
-            // Kontrol değişkenini güncelle
-            tiklanabilirButonBulundu = true;
-        }
-    });
-});
-
 
 </script>
 </body>
