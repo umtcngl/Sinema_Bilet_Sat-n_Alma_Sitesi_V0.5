@@ -34,17 +34,7 @@ a{
         width: auto;
         height: auto;
     }
-    /*
-    color: #FFFFFF;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    */
+    
 
 }
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -278,7 +268,7 @@ p.text span{
     transition: transform 0.3s;
   }
   .aboabo>.asdfgh>a:active{
-    color: gold;
+    color: rgb(162, 146, 0);
     font-weight: bold;
     cursor: pointer;
     transform: scale(1.0);

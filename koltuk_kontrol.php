@@ -21,7 +21,7 @@ try {
             // Eğer rezerve edilmiş koltuklar varsa, JSON formatında gönder
             echo json_encode($reservedSeats);
         } else {
-            // Eğer rezerve edilmiş koltuk yoksa, boş bir dizi gönder
+            // Eğer rezerve edilmiş kontrol için gerekli bilgileri gönder.
             echo json_encode([$seansValue,$selectedTarih,$salonAdi]);
         }
     } else {

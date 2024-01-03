@@ -19,7 +19,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Ana Sayfa</title>
+    <title>Hakkımızda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
@@ -39,15 +39,7 @@ else{
 <div class="container1111">
     <div class="anketimsi">
         <h1 style="color:white">Site Hakkında</h1>
-        <p style="line-height:2.5;word-spacing:8px;font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;">Bu Sitenin Yapımı <span style="color: gold;">16.11.2023 Perşembe </span>Günü Bitti.</p>
-
-        <p style="line-height:2.5;word-spacing:10px;font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;">Tutorial ve Video lar Yaklaşık <span style="color: gold;">24</span> saat sürdü. </p>
-
-        <p style="line-height:2.5;word-spacing:10px;font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;"> Siteyi <span style="color: gold;">6</span> Saatte Yaptım.</p>
-
-        <p style="line-height:2.5;word-spacing:10px;font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;"><span style="color: gold;">3</span> Saat Tasarım - <span style="color: gold;">1</span> Saat Javascript - <span style="color: gold;">2</span> Saat Php</p>
-
-        <p style="line-height:2.5;word-spacing:10px;font-family:Georgia, Times, 'Times New Roman', serif;font-size: 20px;color: white;"> Site <span style="color: gold;">Github Profilimde</span> Pinlenmiş Durumda. Github Profilime Yan Taraftan Erişebilirsiniz.</p>
+        
 
     </div>
     <div class="iletisimbaglanti">

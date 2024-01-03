@@ -39,7 +39,7 @@ else{
 <div class="anahat">
     <div class="afisdivi">
         <div class="slider">
-            <img src="img/2.jpg" alt="Testere 10" class="afis">
+            <img src="#" class="afis">
             <div class="button">
                 <i class="fas fa-chevron-left fa-2x soldüzenle"></i>
                 <i class="fas fa-chevron-right fa-2x sagdüzenle"></i>

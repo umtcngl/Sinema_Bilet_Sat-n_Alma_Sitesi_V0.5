@@ -47,7 +47,7 @@ date_default_timezone_set('Europe/Istanbul');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Salon 1</title>
+    <title><?php echo $sayfaAdi;?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         form input {
@@ -202,7 +202,7 @@ seansForm.addEventListener('change', function () {
     const selectedSeans = document.querySelector('input[name="seans"]:checked');
 
     // Eğer seans seçilmişse, seans değerini al; seçili değilse "Seans seçilmedi" olarak ata
-    const seansValue = selectedSeans ? selectedSeans.value + ':00' : "Seans seçilmedi";
+    const seansValue = selectedSeans ? selectedSeans.value + ':00' : null;
 
     // Seçili tarihi al, ve JavaScript Date objesine çevir
     const selectedTarih = new Date(document.getElementById('tarih').value);
@@ -214,12 +214,12 @@ seansForm.addEventListener('change', function () {
     const currentTime = new Date("<?php date_default_timezone_set('Europe/Istanbul'); echo date("Y-m-d H:i"); ?>");
 
     // Seçili seansın tarihini ve saatini bir araya getir
-    const selectedDateTime = new Date(selectedTarih.getFullYear(), selectedTarih.getMonth(), selectedTarih.getDate(), 
+    const selectedDateTime = new Date(selectedTarih.getFullYear(), selectedTarih.getMonth(), selectedTarih.getDate(),
         parseInt(seansValue.split(':')[0]), parseInt(seansValue.split(':')[1]));
 
     // Tarihi ve saatleri kontrol et
-    if (selectedDateTime < currentTime) {
-        // Eğer seçili tarih ve saat, şuanki tarihten ve saatinden önceyse
+    if ((!selectedDateTime) || selectedDateTime < currentTime) {
+        // Eğer seans veya tarih seçilmemişse veya seçili tarih ve saat, şuanki tarihten ve saatten önceyse
         // Satın alma butonuna tiklanamazbuton class'ını ekle
         buyButton.classList.add('tiklanamazbuton');
     } else {
@@ -254,6 +254,7 @@ seansForm.addEventListener('change', function () {
     });
 
 });
+
 
 
 document.addEventListener('DOMContentLoaded', function() {

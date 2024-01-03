@@ -19,7 +19,7 @@ if (isset($_SESSION['hesap'])) {
     $kullaniciAdi = $_SESSION['hesap'];
 
     // Veritabanından kullanıcı bilgilerini çekme
-    $sorgu = $db->prepare("SELECT id, bakiye FROM users WHERE kullaniciadi = :kullaniciadi");
+    $sorgu = $db->prepare("SELECT id, bakiye , kullanici_rol FROM users WHERE kullaniciadi = :kullaniciadi");
     $sorgu->bindParam(':kullaniciadi', $kullaniciAdi);
     $sorgu->execute();
 
@@ -29,6 +29,7 @@ if (isset($_SESSION['hesap'])) {
     // Kullanıcı bilgilerini $_SESSION'a at
     $_SESSION['kullanici_id'] = $sonuc['id'];
     $_SESSION['bakiye'] = $sonuc['bakiye'];
+    $_SESSION['kullanici_rol'] = $sonuc['kullanici_rol'];
 
     $kullaniciId = $_SESSION['kullanici_id'];
     $bugun = date("Y-m-d");
@@ -134,6 +135,7 @@ if (isset($_SESSION['hesap']) && isset($_POST['hesap_sil'])) {
             <br><br><br>
             <input type="button" class="formsubmit" value="Biletlerim" onclick="location.href='biletlerim.php';">
             <br><br><br>
+            <input type="button" class="formsubmit" value="Admin Paneli" id="adminpanel" style="display:none" onclick="location.href='adminpanel.php';">
             <div id="silmeButonDiv">
                 <input type="button" onclick="silmebutonlarinigöster()" class="formsubmit1" value="Hesabımı Sil !!!">
             </div>
@@ -149,11 +151,11 @@ if (isset($_SESSION['hesap']) && isset($_POST['hesap_sil'])) {
 </div>
 <script>
         window.onload = function() {
-            var kullaniciAdi = "<?php echo $_SESSION['hesap'];?>";
+            var kullaniciRol = "<?php echo $_SESSION['kullanici_rol'];?>";
 
-            // Kullanıcı adı "admin" ise butonu gizle
-            if (kullaniciAdi === "admin") {
+            if (kullaniciRol == 1) {
                 document.getElementById("silmeButonDiv").style.display = "none";
+                document.getElementById("adminpanel").style.display = "block";
             }
         }
         function silmebutonlarinigöster(){

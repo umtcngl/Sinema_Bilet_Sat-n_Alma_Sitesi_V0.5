@@ -96,20 +96,32 @@ h1{
     height: 450px;
 }
 .iletisimbaglanti  a{
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    color: white;
-    font-size: 20px;
-    margin-top:40px ;
-    background-color: transparent;
+    color: gold;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s;
 }
 .iletisimbaglanti  a:hover{
-    color: gold;
+    color: #6da8cd;
+    font-weight: bold;
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: transform 0.3s;
     
+}
+.iletisimbaglanti  a:active{
+    color: gold;
+    font-weight: bold;
+    cursor: pointer;
+    transform: scale(1.0);
+    transition: transform 0.3s;
 }
 .adivi{
     margin-top: 100px;
 }
 .adivi:hover{
+    transition: transform 0.3s;
     cursor: pointer;
     transform: scale(1.1);
 }

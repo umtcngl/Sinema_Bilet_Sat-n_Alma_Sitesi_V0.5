@@ -2,7 +2,7 @@
 include("db_baglanti.php");
 session_start();
 
-if (isset($_POST["koltukID"])) {
+if (isset($_POST["koltukID"]) && isset($_POST["sayfaAdi"]) && isset($_POST["seans"]) && isset($_POST["secilentarih"]) && isset($_POST["filmAdi"])) {
     try {
         $selectedSeatIDs = explode(",", $_POST["koltukID"]);
         $selectedSeatCount = count($selectedSeatIDs);
@@ -46,10 +46,10 @@ if (isset($_POST["koltukID"])) {
         $bakiyeGuncelleSorgusu->bindParam(':kullaniciId', $kullaniciId, PDO::PARAM_INT);
         $bakiyeGuncelleSorgusu->execute();
 
-        echo "İşlem başarılı";
+        $_SESSION['bakiye'] = $kullaniciBakiye;
+
     } catch (PDOException $e) {
         echo "Hata: " . $e->getMessage();
     }
-    $_SESSION['bakiye'] = $kullaniciBakiye;
 }
 ?>
