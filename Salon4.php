@@ -15,20 +15,20 @@ if (isset($_SESSION['hesap'])) {
 //--------------------------------------------------------------------
 $sayfaAdi = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
 
-// Salon adını aldıktan sonra, salon adından salon ID'yi ve koltuk sayısını almak için bir sorgu yapabilirsiniz.
-$sorgusalonid = $db->prepare("SELECT salonID, koltukSayisi FROM salonlar WHERE salonAdi = :salonAdi");
-$sorgusalonid->bindParam(':salonAdi', $sayfaAdi, PDO::PARAM_STR); // salonAdi'nin bir string olduğunu belirtin
+$sorgusalonid = $db->prepare("SELECT salonID,sirasayisi,sutunsayisi,ucret FROM salonlar WHERE salonAdi = :salonAdi");
+$sorgusalonid->bindParam(':salonAdi', $sayfaAdi, PDO::PARAM_STR);
 $sorgusalonid->execute();
 $salonRow = $sorgusalonid->fetch(PDO::FETCH_ASSOC);
 
 if ($salonRow) {
     // Eğer bir sonuç varsa, salon ID ve koltuk sayısını alın
     $salonID = $salonRow['salonID'];
-    $koltukSayisi = $salonRow['koltukSayisi'];
-
+    $sirasayisi = $salonRow['sirasayisi'];
+    $sutunsayisi = $salonRow['sutunsayisi'];
+    $ucret = $salonRow['ucret'];
     // Ardından film sorgusunu gerçekleştirin
     $sorguFilm = $db->prepare("SELECT filmAdi FROM filmler WHERE salonID = :salonID");
-    $sorguFilm->bindParam(':salonID', $salonID, PDO::PARAM_INT); // salonID'nin bir tamsayı olduğunu belirtin
+    $sorguFilm->bindParam(':salonID', $salonID, PDO::PARAM_INT);
     $sorguFilm->execute();
     $filmAdi = $sorguFilm->fetch(PDO::FETCH_ASSOC);
 
@@ -39,6 +39,22 @@ if ($salonRow) {
 }
 
 date_default_timezone_set('Europe/Istanbul');
+
+// Seansları çek
+$sorguSeanslar = $db->prepare("SELECT * FROM seanslar WHERE salonID = :salonID");
+$sorguSeanslar->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+$sorguSeanslar->execute();
+$seanslar = $sorguSeanslar->fetchAll(PDO::FETCH_ASSOC);
+
+$seansSutunlari = [];
+foreach ($seanslar as $seans) {
+    foreach ($seans as $key => $value) {
+        if (strpos($key, 'seans') !== false && $value !== '00:00:00') {
+            $seansSaat = date('H:i', strtotime($value)); // Sadece saat kısmını al
+            $seansSutunlari[] = $seansSaat;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -83,31 +99,23 @@ date_default_timezone_set('Europe/Istanbul');
 <!-- MENU SONU -->
     <div class="ortala">
         <div class="screen"></div>
-        <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi']." "."(".$koltukSayisi.")";?></div>
+        <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi'];?></div>
     </div>
     <div class="container1">
         <div class="yanyana">
             <div class="sira">
-                <div class="harfler">A</div>
-                <div class="harfler">B</div>
-                <div class="harfler">C</div>
-                <div class="harfler">D</div>
-                <div class="harfler">E</div>
-                <div class="harfler">F</div>
-                <div class="harfler">G</div>
-                <div class="harfler">H</div>
-                <div class="harfler"></div>
+            <?php
+            $harfler = range('A', 'Z');
+            for ($k = 0; $k < $sirasayisi; $k++) {
+                echo '<div class="harfler">' . $harfler[$k] . '</div>';
+            }
+            echo '<div class="harfler"></div>';
+            ?>
             </div>
             <?php
-            $siraSayisi = 11;
-            $koltukSayisi = 8;
-            $baslangicDegeri = 1;
-
-            $harfler = range('A', 'H');
-
-            for ($i = 1; $i <= $siraSayisi; $i++) {
+            for ($i = 1; $i <= $sutunsayisi; $i++) {
                 echo '<div class="sira">';
-                for ($j = 1; $j <= $koltukSayisi; $j++) {
+                for ($j = 1; $j <= $sirasayisi; $j++) {
                     $koltukID = $harfler[$j - 1] . $i;
                     echo '<div class="seat" id="' . $koltukID . '"></div>';
                 }
@@ -120,28 +128,29 @@ date_default_timezone_set('Europe/Istanbul');
             <div class="altalta">
             <!-- Seans butonları -->
             <form id="seansForm" method="POST">
-                <input type="date" id="tarih" name="tarih" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false">
-                <br><br>
+                <input type="date" id="tarih" name="tarih" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false"><br><br>
 
                 <div>
-                    <input type="radio" id="seans12" name="seans" value="12:00" class="formradio">
-                    <label for="seans12">12:00 Seansı</label>
+                    <?php
+                    $sutunSayisi = 2; // Her satırda kaç seans saatı gösterileceğini belirleyin
+                    $seansCount = 0;
+
+                    foreach ($seansSutunlari as $seansSaat) {
+                        echo '<div>';
+                        echo '<input type="radio" id="seans' . $seansSaat . '" name="seans" value="' . $seansSaat . '" class="formradio">';
+                        echo '<label for="seans' . $seansSaat . '">' . $seansSaat . ' Seansı</label>';
+                        echo '</div>';
+                        $seansCount++;
+
+                        // Belirlenen sütun sayısına ulaşıldığında yeni bir satıra geç
+                        if ($seansCount % $sutunSayisi == 0) {
+                            echo '<br>';
+                        }
+                    }
+                    ?>
                 </div>
-                <br>
-                <div>
-                    <input type="radio" id="seans14" name="seans" value="14:00" class="formradio">
-                    <label for="seans14">14:00 Seansı</label>
-                </div>
-                <br>
-                <div>
-                    <input type="radio" id="seans16" name="seans" value="16:00" class="formradio">
-                    <label for="seans16">16:00 Seansı</label>
-                </div>
-                <br/>
-                <div>
-                    <input type="radio" id="seans18" name="seans" value="18:00" class="formradio">
-                    <label for="seans18">18:00 Seansı</label>
-                </div>
+
+
             </form>
         </div>
         </div>
@@ -190,7 +199,7 @@ function updateCounts() {
 
     let selectedSeatCount = selectedSeats.length;
     count.innerText = selectedSeatCount;
-    amount.innerText = selectedSeatCount * 50; // Her bir koltuk 50 TL olsun varsayalım
+    amount.innerText = selectedSeatCount * <?php echo $ucret;?>;
 
     console.log('Seçilen Koltuk ID\'leri:', selectedSeatIDs);
 }
@@ -263,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var minDate = new Date(today);
     minDate.setDate(today.getDate());
 
-    var daysUntilNextFriday = 5 - today.getDay() + 1;
+    var daysUntilNextFriday = 5 - today.getDay();
     var nextFriday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + daysUntilNextFriday);
 
     var maxDate = nextFriday.toISOString().split('T')[0];
@@ -282,13 +291,14 @@ function satinalmaFormunuGonder(e) {
         const filmAdi = "<?php echo $filmAdi['filmAdi']; ?>";
         const sayfaAdi = "<?php echo $sayfaAdi; ?>";
         const koltukIDler = selectedSeatIDs.join(',');
+        const ucret =<?php echo $ucret;?> ;
 
         fetch('satinal.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `sayfaAdi=${sayfaAdi}&seans=${seansValue}&secilentarih=${selectedTarih}&koltukID=${koltukIDler}&filmAdi=${filmAdi}`,
+            body: `sayfaAdi=${sayfaAdi}&seans=${seansValue}&secilentarih=${selectedTarih}&koltukID=${koltukIDler}&filmAdi=${filmAdi}&ucret=${ucret}`,
         })
         .then(response => response.text())
         .then(data => {

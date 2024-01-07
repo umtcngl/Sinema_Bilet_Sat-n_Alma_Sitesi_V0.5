@@ -47,7 +47,13 @@ if ($_SESSION['kullanici_rol'] != 1) {
 <!-- MENU SONU -->
 <div class="containergiris">
         <form action="" method="POST">
-        <input type="button" class="formsubmit" value="Kullanıcılar" onclick="location.href='admin_kullanicilar.php';">
+        <input type="button" class="formsubmit" value="Kullanıcılar" onclick="location.href='admin_kullanicilar.php';"><br><br>
+
+        <input type="button" class="formsubmit" value="Salonlar" onclick="location.href='admin_salonlar.php';"><br><br>
+
+        <input type="button" class="formsubmit" value="Filmler" onclick="location.href='admin_filmler.php';"><br><br>
+
+        <input type="button" class="formsubmit" value="Seanslar" onclick="location.href='admin_seanslar.php';">
         </form>
 </div>
 <script>

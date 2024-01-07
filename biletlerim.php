@@ -21,7 +21,7 @@ if (isset($_SESSION['hesap'])) {
 $kullaniciId = $_SESSION['kullanici_id'];
 
 // Biletleri çek ve tarihe göre artan sırala
-$sorguBiletler = $db->prepare("SELECT biletID, filmAdi, salonAdi, bilet_tarihi, islem_tarihi, seans, koltuk
+$sorguBiletler = $db->prepare("SELECT *
                                FROM biletler
                                WHERE biletler.kullaniciID = :kullaniciId
                                ORDER BY biletler.biletID DESC");
@@ -41,8 +41,8 @@ if (isset($_POST['iptal'])) {
     $iptalBilet = $sorguIptal->fetch(PDO::FETCH_ASSOC);
 
     if ($iptalBilet) {
-        // Bakiye iadesi için tam bilet ücretini kullan
-        $iptalBakiye = 50; // Tam bilet ücreti
+        $ucret=$iptalBilet['odenenucret'];
+        $iptalBakiye = ($ucret)/2;
         $kullaniciBakiye = $_SESSION['bakiye'] + $iptalBakiye;
 
         // Veritabanındaki bakiyeyi güncelle
@@ -79,7 +79,7 @@ if (isset($_POST['iptal'])) {
     <style>
         table {
             margin: 0 auto; /* Tabloyu yatayda ortala */
-            width: 80%; /* Tablo genişliğini ayarla, isteğe bağlı */
+            width: 90%; /* Tablo genişliğini ayarla, isteğe bağlı */
             border-collapse: collapse; /* Tablo kenarlıklarını birleştir */
             border:none;
             border-radius:40px;
@@ -145,6 +145,7 @@ if (isset($_POST['iptal'])) {
             <th>Seans</th>
             <th>Bilet Tarihi</th>
             <th>İşlem Tarihi</th>
+            <th>Ödenen Ücret</th>
             <th>İptal</th>
         </tr>
         </thead>
@@ -153,11 +154,14 @@ if (isset($_POST['iptal'])) {
                     <tr>
                         <td><?php echo $bilet['biletID']; ?></td>
                         <td><?php echo $bilet['filmAdi']; ?></td>
-                        <td><?php echo $bilet['salonAdi']; ?></td>
+                        <td><?php echo $bilet['salonAdi'];
+                        echo '<a href="' . $bilet['salonAdi'] . '.php" class="buton"><i class="fas fa-arrow-right slni"></i></a>';
+                        ?></td>
                         <td><?php echo $bilet['koltuk']; ?></td>
                         <td><?php echo $bilet['seans']; ?></td>
                         <td><?php echo $bilet['bilet_tarihi']; ?></td>
                         <td><?php echo $bilet['islem_tarihi']; ?></td>
+                        <td><?php echo $bilet['odenenucret']; ?></td>
                         <td>
                             <?php
                             date_default_timezone_set('Europe/Istanbul');

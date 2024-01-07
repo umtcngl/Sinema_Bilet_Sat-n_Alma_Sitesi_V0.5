@@ -49,7 +49,7 @@ else{
     <div class="afisaciklamasi">
         <div class="aboabo">
             <h1 class="baslik">TESTERE X</h1>
-            <div class="asdfgh"><a href="#" class="bilet-al-buton"><i class="fas fa-film"></i>Bilet Al</a></div>
+            <div class="asdfgh"><a href="<?php if (!isset($_SESSION['hesap'])) echo 'girisyap.php'; ?>" class="bilet-al-buton"><i class="fas fa-film"></i>Bilet Al</a></div>
         </div>
         <h3>ÖZET</h4>
         <p class="aciklama">
@@ -57,7 +57,8 @@ else{
         </p>
     </div>
 </div>
-<script src="index.js"></script>
+<script src="index.js" giris-durumu="<?php echo isset($_SESSION['hesap']) ? 'true' : 'false'; ?>"></script>
+
 <script>
     const girisyapyazisindex = document.querySelector(".girisyapyazisindex");
     girisyapyazisindex.textContent = $hesap;

@@ -21,11 +21,22 @@ function getFilms() {
         .catch(error => console.error('Filmleri alırken bir hata oluştu: ', error));
 }
 
-function gosterAfişi(index) {
-    afisElement.src = films[index].afis;
-    baslikElement.textContent = films[index].filmAdi;
-    aciklamaElement.textContent = films[index].aciklama;
-    biletAlButon.href = "Salon"+films[index].salonID+".php";
+const isGirisYapilmis = document.currentScript.getAttribute('giris-durumu');
+// Daha sonra, isGirisYapilmis değişkenini kullanarak işlemleri gerçekleştirebilirsiniz
+if (isGirisYapilmis === 'true') {
+    function gosterAfişi(index) {
+        afisElement.src = films[index].afis;
+        baslikElement.textContent = films[index].filmAdi;
+        aciklamaElement.textContent = films[index].aciklama;
+        biletAlButon.href = "Salon"+films[index].salonID+".php";
+    }
+} else {
+    function gosterAfişi(index) {
+        afisElement.src = films[index].afis;
+        baslikElement.textContent = films[index].filmAdi;
+        aciklamaElement.textContent = films[index].aciklama;
+        biletAlButon.href = "girisyap.php";
+    }
 }
 
 solOk.addEventListener("click", function () {

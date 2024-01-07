@@ -2,12 +2,12 @@
 include("db_baglanti.php");
 session_start();
 
-if (isset($_POST["koltukID"]) && isset($_POST["sayfaAdi"]) && isset($_POST["seans"]) && isset($_POST["secilentarih"]) && isset($_POST["filmAdi"])) {
+if (isset($_POST["koltukID"]) && isset($_POST["sayfaAdi"]) && isset($_POST["seans"]) && isset($_POST["secilentarih"]) && isset($_POST["filmAdi"]) && isset($_POST["ucret"]) ) {
     try {
         $selectedSeatIDs = explode(",", $_POST["koltukID"]);
         $selectedSeatCount = count($selectedSeatIDs);
 
-        $koltukFiyati = 50;
+        $koltukFiyati = $_POST["ucret"];
         $kullaniciBakiye = $_SESSION['bakiye'];
 
         $toplamUcret = $selectedSeatCount * $koltukFiyati;
@@ -27,7 +27,7 @@ if (isset($_POST["koltukID"]) && isset($_POST["sayfaAdi"]) && isset($_POST["sean
             $tarih = date("Y-m-d H:i:s"); // Şu anki tarihi alabilirsiniz
             $kullaniciId = $_SESSION['kullanici_id'];
 
-            $stmt = $db->prepare("INSERT INTO biletler (kullaniciID, filmAdi, salonAdi, bilet_tarihi, islem_tarihi, seans, koltuk) VALUES (:kullaniciID, :filmAdi, :salonAdi, :bilet_tarihi, :islem_tarihi, :seans, :koltukID)");
+            $stmt = $db->prepare("INSERT INTO biletler (kullaniciID, filmAdi, salonAdi, bilet_tarihi, islem_tarihi, seans, koltuk,odenenucret) VALUES (:kullaniciID, :filmAdi, :salonAdi, :bilet_tarihi, :islem_tarihi, :seans, :koltukID,:odenenucret)");
             $stmt->bindParam(':kullaniciID', $kullaniciId, PDO::PARAM_INT);
             $stmt->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
             $stmt->bindParam(':salonAdi', $salonAdi, PDO::PARAM_STR);
@@ -35,6 +35,7 @@ if (isset($_POST["koltukID"]) && isset($_POST["sayfaAdi"]) && isset($_POST["sean
             $stmt->bindParam(':islem_tarihi', $tarih, PDO::PARAM_STR);
             $stmt->bindParam(':seans', $seans, PDO::PARAM_STR);
             $stmt->bindParam(':koltukID', $koltukID, PDO::PARAM_STR);
+            $stmt->bindParam(':odenenucret', $koltukFiyati, PDO::PARAM_INT);
             $stmt->execute();
         }
 

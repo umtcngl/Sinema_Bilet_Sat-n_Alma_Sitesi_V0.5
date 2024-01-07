@@ -17,24 +17,12 @@ if ($_SESSION['kullanici_rol'] != 1) {
     exit();
 }
 
-// Tüm kullanıcıları çek
-$kullanicisorgusu = $db->prepare("SELECT * FROM users order by kullanici_rol");
-$kullanicisorgusu->execute();
-$users = $kullanicisorgusu->fetchAll(PDO::FETCH_ASSOC);
+// Tüm salonları çek
+$filmlersorgusu = $db->prepare("SELECT * FROM filmler order by salonID");
+$filmlersorgusu->execute();
+$filmler = $filmlersorgusu->fetchAll(PDO::FETCH_ASSOC);
 
-// Kullanıcı silme işlemini gerçekleştir
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
-    $userIdToDelete = isset($_POST['sil_user_id']) ? $_POST['sil_user_id'] : null;
 
-    // Kullanıcıyı silme işlemi
-    $deleteQuery = $db->prepare("DELETE FROM users WHERE id = :userId");
-    $deleteQuery->bindParam(':userId', $userIdToDelete, PDO::PARAM_INT);
-    $deleteQuery->execute();
-
-    // Kullanıcılar sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -43,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Admin Kullanıcılar</title>
+    <title>Admin Filmler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
@@ -71,6 +59,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
         tr:nth-child(odd) {
             background-color: rgba(50, 50, 50, 0.5); /* Beyaz tonunda tek sıradaki satır arkaplan rengi */
         }
+        .slni{
+            color:white;
+            margin-left:10px
+        }
+        .slni:hover{
+            color:gold;
+            transform: scale(1.7);
+        }
+        .slni:active{
+            color:#3b82b1;
+            transform: scale(1.4);
+        }
+        .eklebuton{
+            position:absolute;
+            left:150px;
+        }
     </style>
 </head>
 <body>
@@ -88,47 +92,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
 <!-- MENU SONU -->
 <div class="biletlerimsinifi">
 <div class="ortala">
-    <h1 style="color: gold;">Kullanıcılar</h1>
+    <input type="button" class="formsubmit eklebuton" value="Film Ekle" onclick="location.href='admin_film_ekle.php';">
+    <h1 style="color: gold;">Filmler</h1>
+    <label class="altalta">
+            <input type="checkbox" id="anaCheckbox">Salon ID si NULL Olanları Gösterme 
+    </label>
 </div>
     <!-- Kullanıcı Listesi Tablosu -->
-    <table>
+<table>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Kullanıcı Adı</th>
-            <th>Şifre</th>
-            <th>Bakiye</th>
-            <th>Son Giriş Tarihi</th>
-            <th>Kullanıcı Rol</th>
+            <th>Film ID</th>
+            <th>Film Adı</th>
+            <th>Yönetmen</th>
+            <th>Tür</th>
+            <th>Salon ID</th>
             <th>Düzenle</th>
-            <th>Sil</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($users as $user): ?>
+        <?php foreach ($filmler as $film): ?>
             <tr>
-                <td><?php echo $user['id']; ?></td>
-                <td><?php echo $user['kullaniciadi']; ?></td>
-                <td><?php echo $user['sifre']; ?></td>
-                <td><?php echo $user['bakiye']; ?></td>
-                <td><?php echo $user['son_giris_tarihi']; ?></td>
-                <td><?php echo $user['kullanici_rol']; ?></td>
+                <td><?php echo $film['filmID'];   ?></td>
+                <td><?php echo $film['filmAdi'];  ?></td>
+                <td><?php echo $film['yonetmen']; ?></td>
+                <td><?php echo $film['tur'];      ?></td>
+                <td><?php echo $film['salonID'];  ?></td>
                 <td>
-                    <form method="POST" action="admin_user_edit.php">
-                        <input type="hidden" name="edit_user_id" value="<?php echo $user['id']; ?>">
+                    <form method="POST" action="admin_film_edit.php">
+                        <input type="hidden" name="edit_film_id" value="<?php echo $film['filmID']; ?>">
                         <input type="submit" class="formsubmit" name="düzenle" value="Düzenle">
                     </form>
-                </td>
-                <td>
-                    <?php
-                    // Kullanıcı rolüne bağlı olarak Sil butonunu ekleyin
-                    if ($user['kullanici_rol'] != 1 && $user['kullanici_rol'] != 2) {
-                        echo '<form method="POST" action="">
-                                <input type="hidden" name="sil_user_id" value="' . $user['id'] . '">
-                                <input type="submit" class="formsubmit1" name="sil" value="Sil">
-                              </form>';
-                    }
-                    ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -136,6 +130,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
 </table>
 <!-- Kullanıcı Listesi Tablosu SONU -->
 </div>
+<script>
+    document.getElementById('anaCheckbox').addEventListener('change', function() {
+        var tiklanamazSatirlar = document.querySelectorAll('tbody tr');
+        tiklanamazSatirlar.forEach(function(tr) {
+            var salonIDCell = tr.cells[4]; // Salon ID'nin bulunduğu hücre
+            var salonIDValue = salonIDCell.innerText.trim();
 
+            if (document.getElementById('anaCheckbox').checked) {
+                // Checkbox seçili ise, salonID'si NULL olanları gizle
+                if (salonIDValue === '' || salonIDValue === 'NULL') {
+                    tr.style.display = 'none';
+                } else {
+                    tr.style.display = 'table-row';
+                }
+            } else {
+                // Checkbox seçili değilse, tüm satırları göster
+                tr.style.display = 'table-row';
+            }
+        });
+    });
+
+    // Sayfa yüklendiğinde checkbox durumunu kontrol et
+    anaCheckbox.checked = true;
+    anaCheckbox.dispatchEvent(new Event('change'));
+</script>
 </body>
 </html>

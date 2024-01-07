@@ -18,46 +18,48 @@ if ($_SESSION['kullanici_rol'] != 1) {
 }
 
 // Düzenlenecek kullanıcının ID'sini al
-$editUserId = isset($_POST['edit_user_id']) ? $_POST['edit_user_id'] : null;
+$filmID = isset($_POST['edit_film_id']) ? $_POST['edit_film_id'] : null;
 
 // Düzenlenecek kullanıcının bilgilerini çek
-if ($editUserId) {
-    $kullanicisorgusu = $db->prepare("SELECT * FROM users WHERE id = :editUserId");
-    $kullanicisorgusu->bindParam(':editUserId', $editUserId, PDO::PARAM_INT);
-    $kullanicisorgusu->execute();
-    $editUser = $kullanicisorgusu->fetch(PDO::FETCH_ASSOC);
+if ($filmID) {
+    $filmsorgusu = $db->prepare("SELECT * FROM filmler WHERE filmID = :filmID");
+    $filmsorgusu->bindParam(':filmID', $filmID, PDO::PARAM_INT);
+    $filmsorgusu->execute();
+    $editFilm = $filmsorgusu->fetch(PDO::FETCH_ASSOC);
 
     // Eğer kullanıcı bulunamazsa veya ID geçerli değilse, ana kullanıcı listesi sayfasına yönlendir
-    if (!$editUser) {
-        header("Location: admin_kullanicilar.php");
+    if (!$editFilm) {
+        header("Location: admin_salonlar.php");
         exit();
     }
 } else {
     // ID yoksa, ana kullanıcı listesi sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
+    header("Location: admin_salonlar.php");
     exit();
 }
 
 // edit formu gönderildiyse
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     // Formdan gelen veriler
-    $kullaniciAdi = $_POST['kullaniciadi'];
-    $sifre = $_POST['sifre'];
-    $bakiye = $_POST['bakiye'];
-    $kullanici_rol = $_POST['kullanici_rol'];
-    // Diğer alanları ekleyebilirsiniz.
-    $_SESSION['bakiye']=$bakiye;
+    $filmID = $_POST['edit_film_id'];
+    $filmAdi = $_POST['filmAdi'];
+    $yonetmen = $_POST['yonetmen'];
+    $afis = $_POST['afis'];
+    $aciklama=$_POST['aciklama'];
+    $salonID = ($_POST['salonID'] !== '') ? $_POST['salonID'] : null;
+
     // Veritabanında güncelleme yap
-    $updateQuery = $db->prepare("UPDATE users SET kullaniciadi = :kullaniciadi, sifre = :sifre, bakiye = :bakiye ,kullanici_rol = :kullanici_rol WHERE id = :editUserId");
-    $updateQuery->bindParam(':kullaniciadi', $kullaniciAdi, PDO::PARAM_STR);
-    $updateQuery->bindParam(':sifre', $sifre, PDO::PARAM_STR);
-    $updateQuery->bindParam(':bakiye', $bakiye, PDO::PARAM_INT);
-    $updateQuery->bindParam(':kullanici_rol', $kullanici_rol, PDO::PARAM_INT);
-    $updateQuery->bindParam(':editUserId', $editUserId, PDO::PARAM_INT);
+    $updateQuery = $db->prepare("UPDATE filmler SET filmAdi = :filmAdi, yonetmen = :yonetmen ,afis = :afis,aciklama=:aciklama,salonID=:salonID where filmID=:filmID");
+    $updateQuery->bindParam(':filmID', $filmID, PDO::PARAM_INT);
+    $updateQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
+    $updateQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
+    $updateQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
+    $updateQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
+    $updateQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
     $updateQuery->execute();
 
     // Başarıyla güncellendiyse kullanıcıları listeleme sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
+    header("Location: admin_filmler.php");
     exit();
 }
 ?>
@@ -69,12 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Kullanıcı Düzenle</title>
+    <title>Filmleri Düzenle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
     .containergiris {
     max-width: 400px;
-    margin:70px auto;
+    margin:40px auto;
     background-color: grey;
     padding: 20px;
     border-radius: 10px;
@@ -98,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     }
     .back-button {
             position: absolute;
-            top: 150px;
+            top: 120px;
             left: 500px;
             font-size: 30px;
             color:gold;
@@ -134,17 +136,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
 <div class="back-button" onclick="history.go(-1);"><i class="fas fa-arrow-left"></i></div>
     <!-- Kullanıcı Düzenleme Formu -->
     <form method="POST" action="">
-        <input type="hidden" name="edit_user_id" value="<?php echo $editUser['id']; ?>">
-        <label>Kullanıcı Adı:</label>
-        <input type="text" name="kullaniciadi" value="<?php echo $editUser['kullaniciadi']; ?>" required><br>
+        <input type="hidden" name="edit_film_id" value="<?php echo $editFilm['filmID']; ?>">
 
-        <label>Şifre:</label>
-        <input type="password" name="sifre" value="<?php echo $editUser['sifre']; ?>" required><br>
+        <label>Film Adı:</label>
+        <input type="text" name="filmAdi" value="<?php echo $editFilm['filmAdi']; ?>" required>
 
-        <label>Bakiye:</label>
-        <input type="text" name="bakiye" value="<?php echo $editUser['bakiye']; ?>" required><br>
-        <label>Kullanıcı Rol:</label>
-        <input type="text" name="kullanici_rol" value="<?php echo $editUser['kullanici_rol']; ?>" required><br>
+        <label>Salon ID :</label>
+        <input type="number" name="salonID" value="<?php echo $editFilm['salonID']; ?>">
+
+        <label>Yönetmen :</label>
+        <input type="text" name="yonetmen" value="<?php echo $editFilm['yonetmen']; ?>" required>
+
+        <label>Tür :</label>
+        <input type="text" name="tur" value="<?php echo $editFilm['tur']; ?>" required>
+
+        <label>Resim URL :</label>
+        <input type="text" name="afis" value="<?php echo $editFilm['afis']; ?>" required>
+
+        <label>Açıklama :</label>
+        <input type="text" name="aciklama" value="<?php echo $editFilm['aciklama']; ?>" required><br>
+
 
         <input type="submit" class="formsubmit" name="edit" value="Kaydet">
     </form>

@@ -17,22 +17,40 @@ if ($_SESSION['kullanici_rol'] != 1) {
     exit();
 }
 
-// Tüm kullanıcıları çek
-$kullanicisorgusu = $db->prepare("SELECT * FROM users order by kullanici_rol");
-$kullanicisorgusu->execute();
-$users = $kullanicisorgusu->fetchAll(PDO::FETCH_ASSOC);
+// Tüm salonları çek
+$salonlarsorgusu = $db->prepare("SELECT * FROM salonlar order by salonID");
+$salonlarsorgusu->execute();
+$salonlar = $salonlarsorgusu->fetchAll(PDO::FETCH_ASSOC);
 
-// Kullanıcı silme işlemini gerçekleştir
+
+// Silme formu gönderildiyse
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
-    $userIdToDelete = isset($_POST['sil_user_id']) ? $_POST['sil_user_id'] : null;
+    $silSalonID = $_POST['silSalonID'];
 
-    // Kullanıcıyı silme işlemi
-    $deleteQuery = $db->prepare("DELETE FROM users WHERE id = :userId");
-    $deleteQuery->bindParam(':userId', $userIdToDelete, PDO::PARAM_INT);
+    // Veritabanından salonu sil
+    $deleteQuery = $db->prepare("DELETE FROM salonlar WHERE salonID = :salonID");
+    $deleteQuery->bindParam(':salonID', $silSalonID, PDO::PARAM_INT);
     $deleteQuery->execute();
 
-    // Kullanıcılar sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
+    // Silinen salonun sayfa adını oluştur (örneğin salon1.php)
+    $silinenSayfaAdi = "Salon" . $silSalonID . ".php";
+
+    // Eğer sayfa varsa, sil
+    if (file_exists($silinenSayfaAdi)) {
+        unlink($silinenSayfaAdi);
+    }
+
+    // Seansları sil
+    $deleteSeansQuery = $db->prepare("DELETE FROM seanslar WHERE salonID = :salonID");
+    $deleteSeansQuery->bindParam(':salonID', $silSalonID, PDO::PARAM_INT);
+    $deleteSeansQuery->execute();
+
+    // Film tablosunda, silinen salonID'ye sahip olan filmlerin salonID değerini null yap
+    $updateFilmlerQuery = $db->prepare("UPDATE filmler SET salonID = NULL WHERE salonID = :salonID");
+    $updateFilmlerQuery->bindParam(':salonID', $silSalonID, PDO::PARAM_INT);
+    $updateFilmlerQuery->execute();
+
+    header("Location: admin_salonlar.php");
     exit();
 }
 ?>
@@ -43,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Admin Kullanıcılar</title>
+    <title>Admin Salonlar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
@@ -71,6 +89,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
         tr:nth-child(odd) {
             background-color: rgba(50, 50, 50, 0.5); /* Beyaz tonunda tek sıradaki satır arkaplan rengi */
         }
+        .slni{
+            color:white;
+            margin-left:10px
+        }
+        .slni:hover{
+            color:gold;
+            transform: scale(1.7);
+        }
+        .slni:active{
+            color:#3b82b1;
+            transform: scale(1.4);
+        }
+        .eklebuton{
+            position:absolute;
+            left:150px;
+        }
     </style>
 </head>
 <body>
@@ -88,47 +122,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
 <!-- MENU SONU -->
 <div class="biletlerimsinifi">
 <div class="ortala">
-    <h1 style="color: gold;">Kullanıcılar</h1>
+<input type="button" class="formsubmit eklebuton" value="Salon Ekle" onclick="location.href='admin_salon_ekle.php';">
+    <h1 style="color: gold;">Salonlar</h1>
 </div>
     <!-- Kullanıcı Listesi Tablosu -->
-    <table>
+<table>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Kullanıcı Adı</th>
-            <th>Şifre</th>
-            <th>Bakiye</th>
-            <th>Son Giriş Tarihi</th>
-            <th>Kullanıcı Rol</th>
+            <th>Salon ID</th>
+            <th>Salon Adı</th>
+            <th>Sıra Sayisi</th>
+            <th>Sutün Sayisi</th>
+            <th>Ücret</th>
             <th>Düzenle</th>
             <th>Sil</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($users as $user): ?>
+        <?php foreach ($salonlar as $salon): ?>
             <tr>
-                <td><?php echo $user['id']; ?></td>
-                <td><?php echo $user['kullaniciadi']; ?></td>
-                <td><?php echo $user['sifre']; ?></td>
-                <td><?php echo $user['bakiye']; ?></td>
-                <td><?php echo $user['son_giris_tarihi']; ?></td>
-                <td><?php echo $user['kullanici_rol']; ?></td>
+                <td><?php echo $salon['salonID']; ?></td>
+                <td><?php echo $salon['salonAdi'];
+                 echo '<a href="' . $salon['salonAdi'] . '.php" class="buton"><i class="fas fa-arrow-right slni"></i></a>';
+                 ?></td>
+                <td><?php echo $salon['sirasayisi']; ?></td>
+                <td><?php echo $salon['sutunsayisi']; ?></td>
+                <td><?php echo $salon['ucret']; ?></td>
                 <td>
-                    <form method="POST" action="admin_user_edit.php">
-                        <input type="hidden" name="edit_user_id" value="<?php echo $user['id']; ?>">
+                    <form method="POST" action="admin_salon_edit.php">
+                        <input type="hidden" name="edit_salon_id" value="<?php echo $salon['salonID']; ?>">
                         <input type="submit" class="formsubmit" name="düzenle" value="Düzenle">
                     </form>
                 </td>
                 <td>
-                    <?php
-                    // Kullanıcı rolüne bağlı olarak Sil butonunu ekleyin
-                    if ($user['kullanici_rol'] != 1 && $user['kullanici_rol'] != 2) {
-                        echo '<form method="POST" action="">
-                                <input type="hidden" name="sil_user_id" value="' . $user['id'] . '">
-                                <input type="submit" class="formsubmit1" name="sil" value="Sil">
-                              </form>';
-                    }
-                    ?>
+                    <form method="POST" action="">
+                        <input type="hidden" name="silSalonID" value="<?php echo $salon['salonID']; ?>">
+                        <input type="submit" class="formsubmit1" name="sil" value="Sil">
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>

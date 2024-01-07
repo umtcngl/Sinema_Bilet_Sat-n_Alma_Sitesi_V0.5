@@ -32,6 +32,7 @@ if (isset($_SESSION['hesap'])) {
     $_SESSION['kullanici_rol'] = $sonuc['kullanici_rol'];
 
     $kullaniciId = $_SESSION['kullanici_id'];
+    date_default_timezone_set('Europe/Istanbul');
     $bugun = date("Y-m-d");
 
     // Kullanıcının son giriş tarihini al

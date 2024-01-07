@@ -18,46 +18,46 @@ if ($_SESSION['kullanici_rol'] != 1) {
 }
 
 // Düzenlenecek kullanıcının ID'sini al
-$editUserId = isset($_POST['edit_user_id']) ? $_POST['edit_user_id'] : null;
+$salonID = isset($_POST['edit_salon_id']) ? $_POST['edit_salon_id'] : null;
 
 // Düzenlenecek kullanıcının bilgilerini çek
-if ($editUserId) {
-    $kullanicisorgusu = $db->prepare("SELECT * FROM users WHERE id = :editUserId");
-    $kullanicisorgusu->bindParam(':editUserId', $editUserId, PDO::PARAM_INT);
-    $kullanicisorgusu->execute();
-    $editUser = $kullanicisorgusu->fetch(PDO::FETCH_ASSOC);
+if ($salonID) {
+    $salonsorgusu = $db->prepare("SELECT * FROM salonlar WHERE salonID = :salonID");
+    $salonsorgusu->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+    $salonsorgusu->execute();
+    $editSalon = $salonsorgusu->fetch(PDO::FETCH_ASSOC);
 
     // Eğer kullanıcı bulunamazsa veya ID geçerli değilse, ana kullanıcı listesi sayfasına yönlendir
-    if (!$editUser) {
-        header("Location: admin_kullanicilar.php");
+    if (!$editSalon) {
+        header("Location: admin_salonlar.php");
         exit();
     }
 } else {
     // ID yoksa, ana kullanıcı listesi sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
+    header("Location: admin_salonlar.php");
     exit();
 }
 
 // edit formu gönderildiyse
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     // Formdan gelen veriler
-    $kullaniciAdi = $_POST['kullaniciadi'];
-    $sifre = $_POST['sifre'];
-    $bakiye = $_POST['bakiye'];
-    $kullanici_rol = $_POST['kullanici_rol'];
-    // Diğer alanları ekleyebilirsiniz.
-    $_SESSION['bakiye']=$bakiye;
+    $salonID = $_POST['edit_salon_id'];
+    $salonAdi = $_POST['salonAdi'];
+    $sirasayisi = $_POST['sirasayisi'];
+    $sutunsayisi = $_POST['sutunsayisi'];
+    $ucret=$_POST['ucret'];
+
     // Veritabanında güncelleme yap
-    $updateQuery = $db->prepare("UPDATE users SET kullaniciadi = :kullaniciadi, sifre = :sifre, bakiye = :bakiye ,kullanici_rol = :kullanici_rol WHERE id = :editUserId");
-    $updateQuery->bindParam(':kullaniciadi', $kullaniciAdi, PDO::PARAM_STR);
-    $updateQuery->bindParam(':sifre', $sifre, PDO::PARAM_STR);
-    $updateQuery->bindParam(':bakiye', $bakiye, PDO::PARAM_INT);
-    $updateQuery->bindParam(':kullanici_rol', $kullanici_rol, PDO::PARAM_INT);
-    $updateQuery->bindParam(':editUserId', $editUserId, PDO::PARAM_INT);
+    $updateQuery = $db->prepare("UPDATE salonlar SET salonAdi = :salonAdi, sirasayisi = :sirasayisi ,sutunsayisi = :sutunsayisi,ucret=:ucret where salonID=:salonID");
+    $updateQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+    $updateQuery->bindParam(':salonAdi', $salonAdi, PDO::PARAM_STR);
+    $updateQuery->bindParam(':sirasayisi', $sirasayisi, PDO::PARAM_INT);
+    $updateQuery->bindParam(':sutunsayisi', $sutunsayisi, PDO::PARAM_INT);
+    $updateQuery->bindParam(':ucret', $ucret, PDO::PARAM_INT);
     $updateQuery->execute();
 
     // Başarıyla güncellendiyse kullanıcıları listeleme sayfasına yönlendir
-    header("Location: admin_kullanicilar.php");
+    header("Location: admin_salonlar.php");
     exit();
 }
 ?>
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-    <title>Kullanıcı Düzenle</title>
+    <title>Salonları Düzenle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
     .containergiris {
@@ -134,17 +134,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
 <div class="back-button" onclick="history.go(-1);"><i class="fas fa-arrow-left"></i></div>
     <!-- Kullanıcı Düzenleme Formu -->
     <form method="POST" action="">
-        <input type="hidden" name="edit_user_id" value="<?php echo $editUser['id']; ?>">
-        <label>Kullanıcı Adı:</label>
-        <input type="text" name="kullaniciadi" value="<?php echo $editUser['kullaniciadi']; ?>" required><br>
+        <input type="hidden" name="edit_salon_id" value="<?php echo $editSalon['salonID']; ?>">
 
-        <label>Şifre:</label>
-        <input type="password" name="sifre" value="<?php echo $editUser['sifre']; ?>" required><br>
+        <label>Salon Adı:</label>
+        <input type="text" name="salonAdi" value="<?php echo $editSalon['salonAdi']; ?>" readonly><br>
 
-        <label>Bakiye:</label>
-        <input type="text" name="bakiye" value="<?php echo $editUser['bakiye']; ?>" required><br>
-        <label>Kullanıcı Rol:</label>
-        <input type="text" name="kullanici_rol" value="<?php echo $editUser['kullanici_rol']; ?>" required><br>
+        <label>Sıra Sayısı (1) :</label>
+        <input type="number" name="sirasayisi" value="<?php echo $editSalon['sirasayisi']; ?>" required><br>
+
+        <label>Sutün Sayısı (A) :</label>
+        <input type="number" name="sutunsayisi" value="<?php echo $editSalon['sutunsayisi']; ?>" required><br>
+
+        <label>Ücret :</label>
+        <input type="number" name="ucret" value="<?php echo $editSalon['ucret']; ?>" required><br>
 
         <input type="submit" class="formsubmit" name="edit" value="Kaydet">
     </form>
