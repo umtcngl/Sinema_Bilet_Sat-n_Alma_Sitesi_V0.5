@@ -155,11 +155,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
                     </form>
                 </td>
                 <td>
+            <?php
+            // Eğer salonID 1 ise "Sil" butonunu ve tiklanamazbuton class'ını ekleme
+            if ($salon['salonID'] != 1) {
+                echo '
                     <form method="POST" action="">
-                        <input type="hidden" name="silSalonID" value="<?php echo $salon['salonID']; ?>">
+                        <input type="hidden" name="silSalonID" value="' . $salon['salonID'] . '">
                         <input type="submit" class="formsubmit1" name="sil" value="Sil">
                     </form>
-                </td>
+                ';
+            }
+            ?>
+        </td>
             </tr>
         <?php endforeach; ?>
     </tbody>

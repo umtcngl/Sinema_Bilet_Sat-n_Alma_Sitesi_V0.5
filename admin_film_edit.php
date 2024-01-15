@@ -27,16 +27,17 @@ if ($filmID) {
     $filmsorgusu->execute();
     $editFilm = $filmsorgusu->fetch(PDO::FETCH_ASSOC);
 
-    // Eğer kullanıcı bulunamazsa veya ID geçerli değilse, ana kullanıcı listesi sayfasına yönlendir
     if (!$editFilm) {
         header("Location: admin_salonlar.php");
         exit();
     }
 } else {
-    // ID yoksa, ana kullanıcı listesi sayfasına yönlendir
+
     header("Location: admin_salonlar.php");
     exit();
 }
+
+$uyariMesaji = ""; // Uyarı mesajını tutacak değişken
 
 // edit formu gönderildiyse
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
@@ -45,22 +46,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     $filmAdi = $_POST['filmAdi'];
     $yonetmen = $_POST['yonetmen'];
     $afis = $_POST['afis'];
-    $aciklama=$_POST['aciklama'];
+    $aciklama = $_POST['aciklama'];
     $salonID = ($_POST['salonID'] !== '') ? $_POST['salonID'] : null;
 
-    // Veritabanında güncelleme yap
-    $updateQuery = $db->prepare("UPDATE filmler SET filmAdi = :filmAdi, yonetmen = :yonetmen ,afis = :afis,aciklama=:aciklama,salonID=:salonID where filmID=:filmID");
-    $updateQuery->bindParam(':filmID', $filmID, PDO::PARAM_INT);
-    $updateQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
-    $updateQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
-    $updateQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
-    $updateQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
-    $updateQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
-    $updateQuery->execute();
+    // Eğer salonID boş değilse ve var olup olmadığını kontrol et
+    if (!empty($salonID)) {
+        $checkSalonQuery = $db->prepare("SELECT 1 FROM salonlar WHERE salonID = :salonID");
+        $checkSalonQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $checkSalonQuery->execute();
 
-    // Başarıyla güncellendiyse kullanıcıları listeleme sayfasına yönlendir
-    header("Location: admin_filmler.php");
-    exit();
+        $checkfilm = $db->prepare("SELECT * FROM filmler WHERE salonID = :salonID LIMIT 1");
+        $checkfilm->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $checkfilm->execute();
+        if($checkfilm->fetch()){
+            $uyariMesaji = "Belirtilen Salon ID Başka Bir Filme Atanmış.";
+        }else{
+            // Eğer salonID mevcut değilse, uyarı mesajını ayarla ve form işlemlerini durdur
+            if (!$checkSalonQuery->fetchColumn()) {
+                $uyariMesaji = "Belirtilen Salon ID bulunamadı.";
+            }else{
+                // Veritabanında güncelleme yap
+            $updateQuery = $db->prepare("UPDATE filmler SET filmAdi = :filmAdi, yonetmen = :yonetmen, afis = :afis, aciklama = :aciklama, salonID = :salonID WHERE filmID = :filmID");
+            $updateQuery->bindParam(':filmID', $filmID, PDO::PARAM_INT);
+            $updateQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
+            $updateQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
+            $updateQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
+            $updateQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
+            $updateQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+            $updateQuery->execute();
+            // Başarıyla güncellendiyse kullanıcıları listeleme sayfasına yönlendir
+            header("Location: admin_filmler.php");
+            exit();
+            }
+        }
+        
+    }else{
+        // Veritabanında güncelleme yap
+        $updateQuery = $db->prepare("UPDATE filmler SET filmAdi = :filmAdi, yonetmen = :yonetmen, afis = :afis, aciklama = :aciklama, salonID = :salonID WHERE filmID = :filmID");
+        $updateQuery->bindParam(':filmID', $filmID, PDO::PARAM_INT);
+        $updateQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
+        $updateQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
+        $updateQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
+        $updateQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
+        $updateQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $updateQuery->execute();
+        // Başarıyla güncellendiyse kullanıcıları listeleme sayfasına yönlendir
+        header("Location: admin_filmler.php");
+        exit();
+    }
 }
 ?>
 
@@ -133,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
 <!-- MENU SONU -->
 
 <div class="containergiris">
-<div class="back-button" onclick="history.go(-1);"><i class="fas fa-arrow-left"></i></div>
+<div class="back-button" onclick="location.href='admin_filmler.php';"><i class="fas fa-arrow-left"></i></div>
     <!-- Kullanıcı Düzenleme Formu -->
     <form method="POST" action="">
         <input type="hidden" name="edit_film_id" value="<?php echo $editFilm['filmID']; ?>">
@@ -141,7 +174,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
         <label>Film Adı:</label>
         <input type="text" name="filmAdi" value="<?php echo $editFilm['filmAdi']; ?>" required>
 
-        <label>Salon ID :</label>
+        <label>Salon ID :&nbsp;&nbsp;<?php if (!empty($uyariMesaji)) {echo "<span style='color: red;'>$uyariMesaji</span>";}
+        ?></label>
         <input type="number" name="salonID" value="<?php echo $editFilm['salonID']; ?>">
 
         <label>Yönetmen :</label>

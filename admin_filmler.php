@@ -17,12 +17,21 @@ if ($_SESSION['kullanici_rol'] != 1) {
     exit();
 }
 
-// Tüm salonları çek
-$filmlersorgusu = $db->prepare("SELECT * FROM filmler order by salonID");
+$filmlersorgusu = $db->prepare("SELECT * FROM filmler ORDER BY CASE WHEN salonID IS NULL THEN 1 ELSE 0 END, salonID");
 $filmlersorgusu->execute();
 $filmler = $filmlersorgusu->fetchAll(PDO::FETCH_ASSOC);
 
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sil'])) {
+    $filmID = isset($_POST['sil_film_id']) ? $_POST['sil_film_id'] : null;
+
+    $deleteQuery = $db->prepare("DELETE FROM filmler WHERE filmID = :filmID");
+    $deleteQuery->bindParam(':filmID', $filmID, PDO::PARAM_INT);
+    $deleteQuery->execute();
+
+    header("Location: admin_filmler.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -108,13 +117,21 @@ $filmler = $filmlersorgusu->fetchAll(PDO::FETCH_ASSOC);
             <th>Tür</th>
             <th>Salon ID</th>
             <th>Düzenle</th>
+            <th>Sil</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($filmler as $film): ?>
             <tr>
                 <td><?php echo $film['filmID'];   ?></td>
-                <td><?php echo $film['filmAdi'];  ?></td>
+                <td>
+                    <?php
+                    echo $film['filmAdi'];
+                    if ($film['salonID'] !== null) {
+                        echo '<a href="' .'Salon'. $film['salonID'] . '.php" class="buton"><i class="fas fa-arrow-right slni"></i></a>';
+                    }
+                    ?>
+                </td>
                 <td><?php echo $film['yonetmen']; ?></td>
                 <td><?php echo $film['tur'];      ?></td>
                 <td><?php echo $film['salonID'];  ?></td>
@@ -122,6 +139,12 @@ $filmler = $filmlersorgusu->fetchAll(PDO::FETCH_ASSOC);
                     <form method="POST" action="admin_film_edit.php">
                         <input type="hidden" name="edit_film_id" value="<?php echo $film['filmID']; ?>">
                         <input type="submit" class="formsubmit" name="düzenle" value="Düzenle">
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" action="">
+                        <input type="hidden" name="sil_film_id" value="<?php echo $film['filmID']; ?>">
+                        <input type="submit" class="formsubmit1" name="sil" value="Sil">
                     </form>
                 </td>
             </tr>

@@ -143,7 +143,9 @@ $seanslar = $seanslarsorgusu->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($seanslar as $seans): ?>
             <tr>
                 <td><?php echo $seans['salonID']; ?></td>
-                <td><?php echo "Salon" . $seans['salonID']; ?></td>
+                <td><?php echo "Salon" . $seans['salonID'];
+                echo '<a href="' . "Salon" . $seans['salonID'] . '.php" class="buton"><i class="fas fa-arrow-right slni"></i></a>';
+                ?></td>
                 <td>
                     <div class='flexcontainer'>
                         <?php

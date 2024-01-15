@@ -50,7 +50,7 @@ $seansSutunlari = [];
 foreach ($seanslar as $seans) {
     foreach ($seans as $key => $value) {
         if (strpos($key, 'seans') !== false && $value !== '00:00:00') {
-            $seansSaat = date('H:i', strtotime($value)); // Sadece saat kısmını al
+            $seansSaat = date('H:i', strtotime($value));
             $seansSutunlari[] = $seansSaat;
         }
     }
@@ -97,9 +97,10 @@ foreach ($seanslar as $seans) {
         <div class="btn1 bakiye-div" <?php if (!isset($_SESSION['hesap'])) echo 'style="display: none;"'; ?>><a href="bakiye.php"><i class="fas fa-coins"></i>Bakiyeniz: <span style="color: gold;"><?php echo $_SESSION['bakiye']; ?></span></a></div>
 </header>
 <!-- MENU SONU -->
-    <div class="ortala">
-        <div class="screen"></div>
-        <div class="altalta filmadicanlandir"><?php echo $filmAdi['filmAdi'];?></div>
+<div class="salon yukaridanbosluk">
+    <div>
+    <div class="screen">
+        <div class="ortala filmadicanlandir">PERDE</div>
     </div>
     <div class="container1">
         <div class="yanyana">
@@ -125,37 +126,46 @@ foreach ($seanslar as $seans) {
             }
             ?>
         </div>
-            <div class="altalta">
+    </div>
+    </div>
+
+
+
+
+
+    <div class="container2">
+    <div class="ortala"><div class="filmadicanlandir"><?php echo $filmAdi['filmAdi'];?></div></div><br><br>
+        <div class="seans_container">
             <!-- Seans butonları -->
             <form id="seansForm" method="POST">
-                <input type="date" id="tarih" name="tarih" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false"><br><br>
+            <input type="date" id="tarih" name="tarih" value="<?php echo date('Y-m-d'); ?>" required onkeydown="return false"><br><br>
 
-                <div>
-                    <?php
-                    $sutunSayisi = 2; // Her satırda kaç seans saatı gösterileceğini belirleyin
-                    $seansCount = 0;
+            <div>
+                <?php
+                $sutunSayisi = 2; // Her satırda kaç seans saatı gösterileceğini belirleyin
+                $seansCount = 0;
 
-                    foreach ($seansSutunlari as $seansSaat) {
-                        echo '<div>';
-                        echo '<input type="radio" id="seans' . $seansSaat . '" name="seans" value="' . $seansSaat . '" class="formradio">';
-                        echo '<label for="seans' . $seansSaat . '">' . $seansSaat . ' Seansı</label>';
-                        echo '</div>';
-                        $seansCount++;
+                foreach ($seansSutunlari as $seansSaat) {
+                    echo '<div>';
+                    echo '<input type="radio" id="seans' . $seansSaat . '" name="seans" value="' . $seansSaat . '" class="formradio">';
+                    echo '<label for="seans' . $seansSaat . '">' . $seansSaat . ' Seansı</label>';
+                    echo '</div>';
+                    $seansCount++;
 
-                        // Belirlenen sütun sayısına ulaşıldığında yeni bir satıra geç
-                        if ($seansCount % $sutunSayisi == 0) {
-                            echo '<br>';
-                        }
+                    // Belirlenen sütun sayısına ulaşıldığında yeni bir satıra geç
+                    if ($seansCount % $sutunSayisi == 0) {
+                        echo '<br>';
                     }
-                    ?>
-                </div>
+                }
+                ?>
+            </div>
 
 
             </form>
         </div>
-        </div>
-
-
+    </div>
+</div>
+<div class="marginleft">
     <ul class="info">
         <li>
             <div class="seat selected"></div>
@@ -170,14 +180,17 @@ foreach ($seanslar as $seans) {
             <small>Dolu</small>
         </li>
     </ul>
+    <div>
     <p class="ortala text">
         <span id="count">0</span>&nbsp;Adet Koltuk İçin Hesaplanan Ücret &nbsp;<span id="amount">0</span> &nbsp;TL
     </p>
-    <div class="ortala">
+    </div>
+    <div class="ortala text">
     <form id="satinalmaForm" method="POST" action="satinal.php">
         <input type="submit" class="formsubmit1" value="Satın Al" id="satinalButton">
     </form>
     </div>
+</div>
 <script>
 const container = document.querySelector(".container1");
 const count = document.getElementById('count');

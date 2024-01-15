@@ -86,10 +86,10 @@ a{
 .seat.reserved{
     background-color: darkslategrey;
 }
-.sira:nth-of-type(4){
+.sira:nth-of-type(5){
     margin-right: 20px;
 }
-.sira:nth-last-child(3){
+.sira:nth-last-child(4){
     margin-left: 20px;
 }
 .ortala{
@@ -104,17 +104,32 @@ a{
 }
 .container1{
     border-radius: 8px;
-    justify-content: center;
-    align-items: center;
     margin-top: 10px;
     display: flex;
-    margin-right: 20px;
+}
+.container2{
+    position: absolute;
+    right: 80px;
+}
+.seans_container{
+    display: flex;
+}
+.salon{
+    display: flex;
+    margin-left: 50px;
+}
+.marginleft{
+    margin-left: 50px;
+    display: flex;
+}
+.yukaridanbosluk{
+    margin-top: 40px;
 }
 .screen{
+    text-align: center;
     border-radius: 8px;
-    margin-top: 20px;
     background-color: #FFFFFF;
-    width:475px;
+    width: 102%;
     height: 80px;
     box-shadow: 0 3px 8px rgba(255, 255, 255, 0.7);
 }
@@ -135,9 +150,9 @@ a{
     padding: 3px;
     color: #FFFFFF;
     text-decoration: none;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     display: flex;
-    justify-content: center;
+    border-radius: 20px;
 }
 .info>li{
     margin:0 20px;
@@ -145,6 +160,7 @@ a{
     align-items: center;
 }
 .text{
+    margin-left: 50px;
     font-size: 20px;
     color: #FFFFFF;
     word-spacing: 16px;
@@ -289,9 +305,9 @@ p.text span{
   }
   /*****************************************************************************************/
   .filmadicanlandir{
-    font-size:25px;
+    font-size:40px;
     color: gold;
-    
+    display: flex;
   }
 
 
@@ -324,9 +340,11 @@ p.text span{
     background-color: gold; /* Seçildiğinde arka plan rengini değiştir */
     color: #333; /* Seçildiğinde metin rengini değiştir */
 }
-
+.formradio + label::before{
+    transition: transform 0.2s;
+}
 .formradio:hover + label:before {
-    transform: scale(1.2); /* Hover olduğunda büyütme efekti */
+    transform: scale(1.2);
 }
 .formradio:active + label:before {
     transform: scale(1);

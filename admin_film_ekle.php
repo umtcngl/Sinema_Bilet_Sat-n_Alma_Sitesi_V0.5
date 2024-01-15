@@ -16,7 +16,7 @@ if ($_SESSION['kullanici_rol'] != 1) {
     header("Location: kullanici.php");
     exit();
 }
-
+$uyariMesaji ='';
 // Yeni film ekleme formu gönderildiyse
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
 
@@ -27,19 +27,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
     $salonID = ($_POST['salonID'] !== '') ? $_POST['salonID'] : null;
     $tur = $_POST['tur'];
 
-    // Veritabanına yeni film ekle
-    $insertQuery = $db->prepare("INSERT INTO filmler (filmAdi, yonetmen, afis, aciklama, salonID, tur) VALUES (:filmAdi, :yonetmen, :afis, :aciklama, :salonID, :tur)");
-    $insertQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
-    $insertQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
-    $insertQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
-    $insertQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
-    $insertQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
-    $insertQuery->bindParam(':tur', $tur, PDO::PARAM_STR);
-    $insertQuery->execute();
+    // Eğer salonID boş değilse ve var olup olmadığını kontrol et
+    if (!empty($salonID)) {
+        $checkSalonQuery = $db->prepare("SELECT 1 FROM salonlar WHERE salonID = :salonID");
+        $checkSalonQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $checkSalonQuery->execute();
 
-    header("Location: admin_filmler.php");
-    exit();
+        // Eğer salonID mevcut değilse, uyarı mesajını ayarla ve form işlemlerini durdur
+        if (!$checkSalonQuery->fetchColumn()) {
+            $uyariMesaji = "Belirtilen Salon ID bulunamadı.";
+        } else {
+            // Veritabanına yeni film ekle
+            $insertQuery = $db->prepare("INSERT INTO filmler (filmAdi, yonetmen, afis, aciklama, salonID, tur) VALUES (:filmAdi, :yonetmen, :afis, :aciklama, :salonID, :tur)");
+            $insertQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
+            $insertQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
+            $insertQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
+            $insertQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
+            $insertQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+            $insertQuery->bindParam(':tur', $tur, PDO::PARAM_STR);
+            $insertQuery->execute();
+
+            header("Location: admin_filmler.php");
+            exit();
+        }
+    } else {
+        // Eğer salonID boşsa, sadece veritabanına yeni film ekle
+        $insertQuery = $db->prepare("INSERT INTO filmler (filmAdi, yonetmen, afis, aciklama, salonID, tur) VALUES (:filmAdi, :yonetmen, :afis, :aciklama, :salonID, :tur)");
+        $insertQuery->bindParam(':filmAdi', $filmAdi, PDO::PARAM_STR);
+        $insertQuery->bindParam(':yonetmen', $yonetmen, PDO::PARAM_STR);
+        $insertQuery->bindParam(':afis', $afis, PDO::PARAM_STR);
+        $insertQuery->bindParam(':aciklama', $aciklama, PDO::PARAM_STR);
+        $insertQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $insertQuery->bindParam(':tur', $tur, PDO::PARAM_STR);
+        $insertQuery->execute();
+
+        header("Location: admin_filmler.php");
+        exit();
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -109,7 +135,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
         <label>Film Adı:</label>
         <input type="text" name="filmAdi" required>
 
-        <label>Salon ID :</label>
+        <label>Salon ID :&nbsp;&nbsp;<?php if (!empty($uyariMesaji)) {echo "<span style='color: red;'>$uyariMesaji</span>";}
+        ?></label>
         <input type="number" name="salonID">
 
         <label>Yönetmen :</label>

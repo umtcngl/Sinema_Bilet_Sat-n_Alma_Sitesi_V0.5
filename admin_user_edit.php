@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
 <!-- MENU SONU -->
 
 <div class="containergiris">
-<div class="back-button" onclick="history.go(-1);"><i class="fas fa-arrow-left"></i></div>
+<div class="back-button" onclick="location.href='admin_kullanicilar.php'"><i class="fas fa-arrow-left"></i></div>
     <!-- Kullanıcı Düzenleme Formu -->
     <form method="POST" action="">
         <input type="hidden" name="edit_user_id" value="<?php echo $editUser['id']; ?>">
