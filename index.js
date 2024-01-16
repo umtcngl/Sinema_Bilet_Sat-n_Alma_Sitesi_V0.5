@@ -11,7 +11,7 @@ let intervalID;
 
 // Filmleri almak için AJAX kullanın
 function getFilms() {
-    fetch('get_films.php')
+    fetch('https://raw.githubusercontent.com/umtcngl/Sinema_Bilet_Sat-n_Alma_Sitesi_V0.5/master/get_films.php')
         .then(response => response.json())
         .then(data => {
             films = data;
