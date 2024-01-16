@@ -12,7 +12,8 @@ if (isset($_SESSION['hesap'])) {
     $baglantiIkon = "fas fa-sign-in-alt";
 }
 
-if ($_SESSION['kullanici_rol'] != 1) {
+if ($_SESSION['kullanici_rol'] == 1 || $_SESSION['kullanici_rol'] == 2) {
+}else{
     header("Location: kullanici.php");
     exit();
 }

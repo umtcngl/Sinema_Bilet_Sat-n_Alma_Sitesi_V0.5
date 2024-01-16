@@ -14,7 +14,8 @@ if (isset($_SESSION['hesap'])) {
     $baglantiIkon = "fas fa-sign-in-alt";
 }
 
-if ($_SESSION['kullanici_rol'] != 1) {
+if ($_SESSION['kullanici_rol'] == 1 || $_SESSION['kullanici_rol'] == 2) {
+}else{
     header("Location: kullanici.php");
     exit();
 }
@@ -46,15 +47,14 @@ if ($_SESSION['kullanici_rol'] != 1) {
 </header>
 <!-- MENU SONU -->
 <div class="containergiris">
-        <form action="" method="POST">
-        <input type="button" class="formsubmit" value="Kullanıcılar" onclick="location.href='admin_kullanicilar.php';"><br><br>
-
-        <input type="button" class="formsubmit" value="Salonlar" onclick="location.href='admin_salonlar.php';"><br><br>
-
+    <form action="" method="POST">
+        <?php if ($_SESSION['kullanici_rol'] == 1) { ?>
+            <input type="button" class="formsubmit" value="Kullanıcılar" onclick="location.href='admin_kullanicilar.php';"><br><br>
+            <input type="button" class="formsubmit" value="Salonlar" onclick="location.href='admin_salonlar.php';"><br><br>
+        <?php } ?>
         <input type="button" class="formsubmit" value="Filmler" onclick="location.href='admin_filmler.php';"><br><br>
-
         <input type="button" class="formsubmit" value="Seanslar" onclick="location.href='admin_seanslar.php';">
-        </form>
+    </form>
 </div>
 <script>
 

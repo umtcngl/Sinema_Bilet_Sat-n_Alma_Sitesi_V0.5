@@ -154,7 +154,7 @@ if (isset($_SESSION['hesap']) && isset($_POST['hesap_sil'])) {
         window.onload = function() {
             var kullaniciRol = "<?php echo $_SESSION['kullanici_rol'];?>";
 
-            if (kullaniciRol == 1) {
+            if (kullaniciRol == 1 || kullaniciRol == 2) {
                 document.getElementById("silmeButonDiv").style.display = "none";
                 document.getElementById("adminpanel").style.display = "block";
             }

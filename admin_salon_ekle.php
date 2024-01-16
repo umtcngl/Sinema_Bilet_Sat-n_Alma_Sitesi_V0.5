@@ -49,6 +49,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
 
     file_put_contents($sayfaAdi, $dosyaIcerigi);
 
+    // Tüm salonları çek
+    $salonlarsorgusu = $db->prepare("SELECT * FROM salonlar");
+    $salonlarsorgusu->execute();
+    $salonlar = $salonlarsorgusu->fetchAll(PDO::FETCH_ASSOC);
+
+    // Mevcut seansları çek
+    $seanslarsorgusu = $db->prepare("SELECT * FROM seanslar order by salonID");
+    $seanslarsorgusu->execute();
+    $seanslar = $seanslarsorgusu->fetchAll(PDO::FETCH_ASSOC);
+
+    // Mevcut salonID'leri listesi
+    $mevcutSalonIDListesi = array_column($salonlar, 'salonID');
+
+    // Tabloda olan salonID'leri listesi
+    $tabloSalonIDListesi = array_column($seanslar, 'salonID');
+
+    // Yeni salonlar tespit edilir
+    $yeniSalonlar = array_diff($mevcutSalonIDListesi, $tabloSalonIDListesi);
+
+    // Yeni salonları seanslar tablosuna eklenir
+    foreach ($yeniSalonlar as $yeniSalonID) {
+        $ekleQuery = $db->prepare("INSERT INTO seanslar (salonID) VALUES (:salonID)");
+        $ekleQuery->bindParam(':salonID', $yeniSalonID, PDO::PARAM_INT);
+        $ekleQuery->execute();
+    }
+
     header("Location: admin_salonlar.php");
     exit();
 }

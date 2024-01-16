@@ -12,7 +12,8 @@ if (isset($_SESSION['hesap'])) {
     $baglantiIkon = "fas fa-sign-in-alt";
 }
 
-if ($_SESSION['kullanici_rol'] != 1) {
+if ($_SESSION['kullanici_rol'] == 1 || $_SESSION['kullanici_rol'] == 2) {
+}else{
     header("Location: kullanici.php");
     exit();
 }
@@ -184,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
         <label>Tür :</label>
         <input type="text" name="tur" value="<?php echo $editFilm['tur']; ?>" required>
 
-        <label>Resim URL :</label>
+        <label>Resim URL ( 800 x 1200 ) :</label>
         <input type="text" name="afis" value="<?php echo $editFilm['afis']; ?>" required>
 
         <label>Açıklama :</label>

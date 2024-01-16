@@ -12,7 +12,8 @@ if (isset($_SESSION['hesap'])) {
     $baglantiIkon = "fas fa-sign-in-alt";
 }
 
-if ($_SESSION['kullanici_rol'] != 1) {
+if ($_SESSION['kullanici_rol'] == 1 || $_SESSION['kullanici_rol'] == 2) {
+}else{
     header("Location: kullanici.php");
     exit();
 }
@@ -33,7 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
         $checkSalonQuery->bindParam(':salonID', $salonID, PDO::PARAM_INT);
         $checkSalonQuery->execute();
 
-        // Eğer salonID mevcut değilse, uyarı mesajını ayarla ve form işlemlerini durdur
+        $checkfilm = $db->prepare("SELECT * FROM filmler WHERE salonID = :salonID LIMIT 1");
+        $checkfilm->bindParam(':salonID', $salonID, PDO::PARAM_INT);
+        $checkfilm->execute();
+        if($checkfilm->fetch()){
+            $uyariMesaji = "Belirtilen Salon ID Başka Bir Filme Atanmış.";
+        }else{
+            // Eğer salonID mevcut değilse, uyarı mesajını ayarla ve form işlemlerini durdur
         if (!$checkSalonQuery->fetchColumn()) {
             $uyariMesaji = "Belirtilen Salon ID bulunamadı.";
         } else {
@@ -50,6 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
             header("Location: admin_filmler.php");
             exit();
         }
+        }
+        
     } else {
         // Eğer salonID boşsa, sadece veritabanına yeni film ekle
         $insertQuery = $db->prepare("INSERT INTO filmler (filmAdi, yonetmen, afis, aciklama, salonID, tur) VALUES (:filmAdi, :yonetmen, :afis, :aciklama, :salonID, :tur)");
@@ -145,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ekle'])) {
         <label>Tür :</label>
         <input type="text" name="tur" required>
 
-        <label>Resim URL :</label>
+        <label>Resim URL ( 800 x 1200 ) :</label>
         <input type="text" name="afis" required>
 
         <label>Açıklama :</label>

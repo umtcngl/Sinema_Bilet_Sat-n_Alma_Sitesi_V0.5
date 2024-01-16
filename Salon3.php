@@ -134,7 +134,8 @@ foreach ($seanslar as $seans) {
 
 
     <div class="container2">
-    <div class="ortala"><div class="filmadicanlandir"><?php echo $filmAdi['filmAdi'];?></div></div><br><br>
+    <div class="ortala"><div class="filmadicanlandir"><?php echo !empty($filmAdi['filmAdi']) ? $filmAdi['filmAdi'] : ''; ?>
+</div></div><br><br>
         <div class="seans_container">
             <!-- Seans butonları -->
             <form id="seansForm" method="POST">
@@ -142,20 +143,11 @@ foreach ($seanslar as $seans) {
 
             <div>
                 <?php
-                $sutunSayisi = 2; // Her satırda kaç seans saatı gösterileceğini belirleyin
-                $seansCount = 0;
-
                 foreach ($seansSutunlari as $seansSaat) {
                     echo '<div>';
                     echo '<input type="radio" id="seans' . $seansSaat . '" name="seans" value="' . $seansSaat . '" class="formradio">';
                     echo '<label for="seans' . $seansSaat . '">' . $seansSaat . ' Seansı</label>';
                     echo '</div>';
-                    $seansCount++;
-
-                    // Belirlenen sütun sayısına ulaşıldığında yeni bir satıra geç
-                    if ($seansCount % $sutunSayisi == 0) {
-                        echo '<br>';
-                    }
                 }
                 ?>
             </div>
@@ -217,9 +209,19 @@ function updateCounts() {
     console.log('Seçilen Koltuk ID\'leri:', selectedSeatIDs);
 }
 
+function clearSelectedSeats() {
+    let selectedSeats = container.querySelectorAll('.seat.selected');
+    selectedSeats.forEach(seat => seat.classList.remove('selected'));
+    selectedSeatIDs = [];
+
+    updateCounts(); // updateCounts fonksiyonunu çağır
+}
+
 const seansForm = document.getElementById('seansForm');
 
 seansForm.addEventListener('change', function () {
+    // clearSelectedSeats fonksiyonunu çağır
+    clearSelectedSeats();
     // Seçili seansı al
     const selectedSeans = document.querySelector('input[name="seans"]:checked');
 

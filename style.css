@@ -292,7 +292,7 @@ p.text span{
   }
   /* WebKit (Chrome, Safari) ve Blink (Opera) */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 3px;
   }
   
   ::-webkit-scrollbar-thumb {
